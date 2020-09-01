@@ -22,6 +22,7 @@
 		9816B2A924F4C09200F0F4A6 /* csvManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9816B2A824F4C09100F0F4A6 /* csvManager.swift */; };
 		9869EFA224F85F290003287B /* DayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9869EFA124F85F290003287B /* DayViewController.swift */; };
 		9869EFA424F85F360003287B /* WeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9869EFA324F85F360003287B /* WeekViewController.swift */; };
+		9869EFA824FEEE600003287B /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9869EFA724FEEE600003287B /* BaseTabBarController.swift */; };
 		98ACE7B324F7557800CC6DE5 /* csvFilesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ACE7B224F7557800CC6DE5 /* csvFilesTableViewController.swift */; };
 		98ACE7B524F760D600CC6DE5 /* csvFilesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ACE7B424F760D600CC6DE5 /* csvFilesTableViewCell.swift */; };
 		98ACE7B724F7713000CC6DE5 /* SummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ACE7B624F7713000CC6DE5 /* SummaryViewController.swift */; };
@@ -48,6 +49,7 @@
 		9816B2A824F4C09100F0F4A6 /* csvManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = csvManager.swift; sourceTree = "<group>"; };
 		9869EFA124F85F290003287B /* DayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
 		9869EFA324F85F360003287B /* WeekViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewController.swift; sourceTree = "<group>"; };
+		9869EFA724FEEE600003287B /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
 		98ACE7B224F7557800CC6DE5 /* csvFilesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = csvFilesTableViewController.swift; sourceTree = "<group>"; };
 		98ACE7B424F760D600CC6DE5 /* csvFilesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = csvFilesTableViewCell.swift; sourceTree = "<group>"; };
 		98ACE7B624F7713000CC6DE5 /* SummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				9816B2A824F4C09100F0F4A6 /* csvManager.swift */,
 				98ACE7B424F760D600CC6DE5 /* csvFilesTableViewCell.swift */,
 				98ACE7B224F7557800CC6DE5 /* csvFilesTableViewController.swift */,
+				9869EFA724FEEE600003287B /* BaseTabBarController.swift */,
 				98ACE7B624F7713000CC6DE5 /* SummaryViewController.swift */,
 				9869EFA124F85F290003287B /* DayViewController.swift */,
 				9869EFA324F85F360003287B /* WeekViewController.swift */,
@@ -243,6 +246,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9869EFA824FEEE600003287B /* BaseTabBarController.swift in Sources */,
 				9869EFA424F85F360003287B /* WeekViewController.swift in Sources */,
 				9816B28E24EE334300F0F4A6 /* AuthenticationManager.swift in Sources */,
 				9816B27824EDDD4000F0F4A6 /* GraphTutorial.xcdatamodeld in Sources */,
