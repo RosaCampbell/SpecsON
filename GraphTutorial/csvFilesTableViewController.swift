@@ -84,11 +84,16 @@ class csvFilesTableViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showData" {
-            let tabCtrl: UITabBarController = segue.destination as! UITabBarController
-            let destinationVC = tabCtrl.viewControllers![0] as! SummaryViewController
+//            let tabCtrl: UITabBarController = segue.destination as! UITabBarController
+//            let destinationVC = tabCtrl.viewControllers![0] as! SummaryViewController
+//            if let indexPath = self.tblCsvFiles.indexPathForSelectedRow {
+//                let selectedRow = csvFiles?[indexPath.row]
+//                destinationVC.csvFile = selectedRow
+//            }
+            let tabCtrl = segue.destination as! BaseTabBarController
             if let indexPath = self.tblCsvFiles.indexPathForSelectedRow {
                 let selectedRow = csvFiles?[indexPath.row]
-                destinationVC.csvFile = selectedRow
+                tabCtrl.csvFile = selectedRow
             }
         }
     }

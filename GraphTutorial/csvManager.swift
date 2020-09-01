@@ -12,8 +12,6 @@ import MSGraphClientModels
 class csvManager: NSObject {
 
     var data:[[String:String]] = []
-    var hourlyData:[[[String:String]]] = []
-    var dailyData:[[[String:String]]] = []
     
     var columnTitles:[String] = []
     //var columnType:[String] = ["Float","Float"]
@@ -59,7 +57,6 @@ class csvManager: NSObject {
                 var newRow = [String:String]()
                 for index in 0..<fields.count{
                     newRow[columnTitles[index]] = fields[index]
-                    
                 }
                 data.append(newRow)
             }

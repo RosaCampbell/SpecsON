@@ -162,10 +162,10 @@
             </objects>
             <point key="canvasLocation" x="2109" y="-159"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Base Tab Bar Controller-->
         <scene sceneID="iZU-rg-uQX">
             <objects>
-                <tabBarController id="EWp-fr-8kD" sceneMemberID="viewController">
+                <tabBarController id="EWp-fr-8kD" customClass="BaseTabBarController" customModule="SpecsON" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="bU0-g9-eGQ"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7K2-fH-giw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
