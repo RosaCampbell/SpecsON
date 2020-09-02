@@ -14,6 +14,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     private var summaryLineChart = LineChartView()
     private var importedFileData = [[String:String]]()
+    private var csvFile: MSGraphDriveItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
+            self.csvFile = tabBar.csvFile
             
             self.summaryLineChart.frame = CGRect(x: 0, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 40)
             self.summaryLineChart.center = self.view.center

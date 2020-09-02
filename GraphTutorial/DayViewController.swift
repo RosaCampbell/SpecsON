@@ -14,6 +14,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
     
     private var dayLineChart = LineChartView()
     private var importedFileData = [[String:String]]()
+    private var csvFile: MSGraphDriveItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +26,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
-            
-            // Convert all data to days
-            
+            self.csvFile = tabBar.csvFile
             
             self.dayLineChart.frame = CGRect(x: 0, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 40)
             self.dayLineChart.center = self.view.center

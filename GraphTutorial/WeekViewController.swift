@@ -43,6 +43,8 @@ class WeekViewController: UIViewController, ChartViewDelegate {
                     if let objTemp = Double(datapoint["Obj"]!) {
                         entries.append(BarChartDataEntry(x: Double(index), y: objTemp))
                     }
+                    print("Time as float: \(datapoint["Time"] ?? "nil")")
+                    
                 }
             } else {
                 for i in 1..<10 {
@@ -57,20 +59,20 @@ class WeekViewController: UIViewController, ChartViewDelegate {
         }
     }
     
-    func chartDataPoints(from xYValues: [Date: Double]) -> [ChartDataEntry] {
-      assert(!xYValues.isEmpty)
-      var dataPoints: [ChartDataEntry] = []
-      var startDate = xYValues.keys.sorted(by: <).first!
-      let endDate = xYValues.keys.sorted(by: >).first!
-
-      repeat {
-        guard let yValue = xYValues[startDate] else {
-          startDate = startDate.advanced(by: TimeInterval(24 * 60 * 60))
-          continue
-        }
-        dataPoints.append(ChartDataEntry(x: Double(startDate.timeIntervalSince1970), y: yValue))
-        startDate = startDate.advanced(by: TimeInterval(24 * 60 * 60))
-      } while startDate <= endDate
-      return dataPoints
-    }
+//    func chartDataPoints(from xYValues: [Date: Double]) -> [ChartDataEntry] {
+//      assert(!xYValues.isEmpty)
+//      var dataPoints: [ChartDataEntry] = []
+//      var startDate = xYValues.keys.sorted(by: <).first!
+//      let endDate = xYValues.keys.sorted(by: >).first!
+//
+//      repeat {
+//        guard let yValue = xYValues[startDate] else {
+//          startDate = startDate.advanced(by: TimeInterval(24 * 60 * 60))
+//          continue
+//        }
+//        dataPoints.append(ChartDataEntry(x: Double(startDate.timeIntervalSince1970), y: yValue))
+//        startDate = startDate.advanced(by: TimeInterval(24 * 60 * 60))
+//      } while startDate <= endDate
+//      return dataPoints
+//    }
 }

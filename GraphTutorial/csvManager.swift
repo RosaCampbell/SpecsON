@@ -57,6 +57,7 @@ class csvManager: NSObject {
                 var newRow = [String:String]()
                 for index in 0..<fields.count{
                     newRow[columnTitles[index]] = fields[index]
+                    
                 }
                 data.append(newRow)
             }
@@ -75,15 +76,17 @@ class csvManager: NSObject {
                 if let strAmbTemp = data[row]["Amb"] {
                     let flObjTemp = Float(strObjTemp)
                     let flAmbTemp = Float(strAmbTemp)
-                    let flTempDiff = flObjTemp! - flAmbTemp!
-                    var state: String = "0"
-                    if (flObjTemp!>23 && flAmbTemp!>3) || (flObjTemp!>30 && flAmbTemp!>30) {
-                        state = "1"
-                    } else {
-                        state = "0"
+                    if (flObjTemp != nil) && (flAmbTemp != nil) {
+                        let flTempDiff = flObjTemp! - flAmbTemp!
+                        var state: String = "0"
+                        if (flObjTemp!>23 && flAmbTemp!>3) || (flObjTemp!>30 && flAmbTemp!>30) {
+                            state = "1"
+                        } else {
+                            state = "0"
+                        }
+                        data[row]["Diff"] = String(flTempDiff)
+                        data[row]["State"] = state
                     }
-                    data[row]["Diff"] = String(flTempDiff)
-                    data[row]["State"] = state
                 }
             }
         }
