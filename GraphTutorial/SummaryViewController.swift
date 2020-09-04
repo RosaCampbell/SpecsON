@@ -35,9 +35,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             var entries = [ChartDataEntry]()
 
             if !self.importedFileData.isEmpty {
-                for index in 1..<self.importedFileData.count {
+                for index in 1..<(self.importedFileData.count-1) {
                     let datapoint = self.importedFileData[index]
-                    if let objTemp = Double(datapoint["Obj"]!) {
+                    if let objTemp = Double(datapoint["Object"]!) {
                         entries.append(ChartDataEntry(x: Double(index), y: objTemp))
                     }
                 }

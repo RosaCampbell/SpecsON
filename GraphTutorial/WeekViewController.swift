@@ -40,10 +40,10 @@ class WeekViewController: UIViewController, ChartViewDelegate {
             if !self.importedFileData.isEmpty {
                 for index in 1..<8 {
                     let datapoint = self.importedFileData[index]
-                    if let objTemp = Double(datapoint["Obj"]!) {
+                    if let objTemp = Double(datapoint["Object"]!) {
                         entries.append(BarChartDataEntry(x: Double(index), y: objTemp))
                     }
-                    print("Time as float: \(datapoint["Time"] ?? "nil")")
+                    //print("Time as float: \(datapoint["Time"] ?? "nil")")
                     
                 }
             } else {

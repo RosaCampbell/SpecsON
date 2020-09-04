@@ -12,9 +12,7 @@ import MSGraphClientModels
 class csvManager: NSObject {
 
     var data:[[String:String]] = []
-    
     var columnTitles:[String] = []
-    //var columnType:[String] = ["Float","Float"]
     var fileName: String = ""
     
     func readStringFromURL(stringURL:String)-> String!{
@@ -39,15 +37,26 @@ class csvManager: NSObject {
         return cleanFile.components(separatedBy: "\n")
     }
     
+    func removeUnwantedHeaderInfo(totalString: String)->String{
+        let stringParts = totalString.components(separatedBy: "Date Time")
+        var tableString = stringParts[1]
+        tableString.insert(contentsOf: "Date Time", at: tableString.startIndex)
+        print(tableString)
+        return tableString
+    }
+    
     func cleanFields(oldString:String) -> [String]{
         let delimiter = "\t"
         let newString = oldString.replacingOccurrences(of: ",", with: delimiter)
         return newString.components(separatedBy: delimiter)
     }
     
+    
+    
     func convertCSV(stringData:String, stringFileName: String) -> [[String:String]] {
         fileName = stringFileName
-        let rows = cleanRows(stringData: stringData)
+        let tableData = removeUnwantedHeaderInfo(totalString: stringData)
+        let rows = cleanRows(stringData: tableData)
         if rows.count > 0 {
             data = []
             columnTitles = cleanFields(oldString: rows.first!)
@@ -65,15 +74,21 @@ class csvManager: NSObject {
             print("No data in file")
         }
         getStatusFromTemperature()
+        for i in 0..<5 {
+            for (key, value) in data[i] {
+                print("\(key) = \(value)")
+            }
+        }
+        
         return data
     }
     
     func getStatusFromTemperature()-> Void {
-        columnTitles.append("Diff")
+        columnTitles.append("Difference")
         columnTitles.append("State")
         for row in 1..<data.count {
-            if let strObjTemp = data[row]["Obj"] {
-                if let strAmbTemp = data[row]["Amb"] {
+            if let strObjTemp = data[row]["Object"] {
+                if let strAmbTemp = data[row]["Ambient"] {
                     let flObjTemp = Float(strObjTemp)
                     let flAmbTemp = Float(strAmbTemp)
                     if (flObjTemp != nil) && (flAmbTemp != nil) {
@@ -84,11 +99,47 @@ class csvManager: NSObject {
                         } else {
                             state = "0"
                         }
-                        data[row]["Diff"] = String(flTempDiff)
+                        data[row]["Difference"] = String(flTempDiff)
                         data[row]["State"] = state
                     }
                 }
             }
         }
+    }
+    
+//    func formatDateTimeColumn(fileName: String )-> Void {
+//        print("formatDateTimeColumn()")
+//        data[1]["Time"] = formatStartDateFromFileName(strFileName: fileName)
+//        for row in 2..<data.count {
+//
+//            data[row]["Time"] = data[row-1]["Time"]
+//        }
+//    }
+    
+//    func addTime(interval: Int, toStartTime: Date) {
+//
+//    }
+    
+    func formatStartDateFromFileName(strFileName: String?) -> String {
+        guard let fileName = strFileName else {
+            return ""
+        }
+        
+        // Get only date/time part of file name
+        let strFileNameParts = fileName.components(separatedBy: ["_", "."])
+        let strStartDate = strFileNameParts[1]
+
+        // Create a formatter to parse files date format
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyyMMddHHmm"
+
+        let dateFormatterDisplay = DateFormatter()
+        dateFormatterDisplay.dateFormat = "MMM dd, yyyy HH:mm"
+
+        let date = dateFormatterGet.date(from: strStartDate)
+        if let newDate = date {
+            return dateFormatterDisplay.string(from: newDate)
+        }
+        return "Date not in format yyyMMddHHmm"
     }
 }

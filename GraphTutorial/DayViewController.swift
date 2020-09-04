@@ -28,7 +28,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
             self.importedFileData = tabBar.fileData
             self.csvFile = tabBar.csvFile
             
-            self.dayLineChart.frame = CGRect(x: 0, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 40)
+            self.dayLineChart.frame = CGRect(x: 100, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 300)
             self.dayLineChart.center = self.view.center
             self.view.addSubview(self.dayLineChart)
 
@@ -37,7 +37,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
             if !self.importedFileData.isEmpty {
                 for index in 1..<self.importedFileData.count {
                     let datapoint = self.importedFileData[index]
-                    if let objTemp = Double(datapoint["Obj"]!) {
+                    if let objTemp = Double(datapoint["Object"]!) {
                         entries.append(ChartDataEntry(x: Double(index), y: objTemp))
                     }
                 }
