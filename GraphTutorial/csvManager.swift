@@ -41,7 +41,6 @@ class csvManager: NSObject {
         let stringParts = totalString.components(separatedBy: "Date Time")
         var tableString = stringParts[1]
         tableString.insert(contentsOf: "Date Time", at: tableString.startIndex)
-        print(tableString)
         return tableString
     }
     
@@ -50,7 +49,6 @@ class csvManager: NSObject {
         let newString = oldString.replacingOccurrences(of: ",", with: delimiter)
         return newString.components(separatedBy: delimiter)
     }
-    
     
     
     func convertCSV(stringData:String, stringFileName: String) -> [[String:String]] {
@@ -74,12 +72,13 @@ class csvManager: NSObject {
             print("No data in file")
         }
         getStatusFromTemperature()
-        for i in 0..<5 {
+        formatDateTimeColumn()
+        
+        for i in 1..<5 {
             for (key, value) in data[i] {
                 print("\(key) = \(value)")
             }
         }
-        
         return data
     }
     
@@ -107,24 +106,37 @@ class csvManager: NSObject {
         }
     }
     
-//    func formatDateTimeColumn(fileName: String )-> Void {
-//        print("formatDateTimeColumn()")
-//        data[1]["Time"] = formatStartDateFromFileName(strFileName: fileName)
-//        for row in 2..<data.count {
-//
-//            data[row]["Time"] = data[row-1]["Time"]
-//        }
-//    }
+    func formatDateTimeColumn()-> Void {
+        print("formatDateTimeColumn()")
+        data[1]["Date Time"] = formatStartDateFromFileName(strFileName: fileName)
+        for row in 2..<(data.count-1) {
+            let prevDate = data[row - 1]["Date Time"] ?? ""
+            data[row]["Date Time"] = addIntervalTo(strDate: prevDate)
+        }
+    }
     
-//    func addTime(interval: Int, toStartTime: Date) {
-//
-//    }
+    func addIntervalTo(strDate: String)-> String {
+
+        // set the recieved and required date format
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
+
+        // convert string to date
+        let prevDate = dateFormatter.date(from: strDate)
+
+        // Add 5 minutes to current date
+        if let newDate = prevDate?.addingTimeInterval(5.0*60.0) {
+            // convert date back into string in correct format
+            return dateFormatter.string(from: newDate)
+        }
+        return "Error uwrapping optional 'prevDate'"
+    }
     
     func formatStartDateFromFileName(strFileName: String?) -> String {
         guard let fileName = strFileName else {
             return ""
         }
-        
+
         // Get only date/time part of file name
         let strFileNameParts = fileName.components(separatedBy: ["_", "."])
         let strStartDate = strFileNameParts[1]
