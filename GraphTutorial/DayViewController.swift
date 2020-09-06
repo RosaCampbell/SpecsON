@@ -12,13 +12,13 @@ import Charts
 
 class DayViewController: UIViewController, ChartViewDelegate {
     
-    private var dayLineChart = LineChartView()
+    private var dayBarChart = BarChartView()
     private var importedFileData = [[String:String]]()
     private var csvFile: MSGraphDriveItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        dayLineChart.delegate = self
+        dayBarChart.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -28,30 +28,80 @@ class DayViewController: UIViewController, ChartViewDelegate {
             self.importedFileData = tabBar.fileData
             self.csvFile = tabBar.csvFile
             
-            self.dayLineChart.frame = CGRect(x: 100, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 300)
-            self.dayLineChart.center = self.view.center
-            self.view.addSubview(self.dayLineChart)
+            self.dayBarChart.frame = CGRect(x: 100, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 300)
+            self.dayBarChart.center = self.view.center
+            self.view.addSubview(self.dayBarChart)
 
-            var entries = [ChartDataEntry]()
+            var entries = [BarChartDataEntry]()
 
             if !self.importedFileData.isEmpty {
-                for index in 1..<self.importedFileData.count {
-                    let datapoint = self.importedFileData[index]
-                    if let objTemp = Double(datapoint["Object"]!) {
-                        entries.append(ChartDataEntry(x: Double(index), y: objTemp))
-                    }
+                var oneDaysData = [[String:String]]()
+                oneDaysData = self.getDataForDay()
+                
+                var dailyStateAverages = [Double]()
+                dailyStateAverages = self.getStateAverages(dayData: oneDaysData)
+                
+//                print("Data for one day")
+//                for k in 0..<288 {
+//                    for (key, value) in oneDaysData[k] {
+//                        print("\(key) = \(value)")
+//                    }
+//                }
+//                for index in 1..<oneDaysData.count {
+//                    let datapoint = oneDaysData[index]
+//                    if let objTemp = Double(datapoint["Object"]!) {
+//                        entries.append(BarChartDataEntry(x: Double(index), y: objTemp))
+//                    }
+//                }
+                for index in 1..<dailyStateAverages.count {
+                    entries.append(BarChartDataEntry(x: Double(index), y: dailyStateAverages[index]))
                 }
             } else {
-                for i in 1..<10 {
-                    entries.append(ChartDataEntry(x: Double(i), y: 25.00))
+                for i in 1..<12 {
+                    entries.append(BarChartDataEntry(x: Double(i), y: 0))
                 }
             }
 
-            let set = LineChartDataSet(entries: entries)
+            let set = BarChartDataSet(entries: entries)
             set.colors = ChartColorTemplates.pastel()
-            set.drawCirclesEnabled = false
-            let data = LineChartData(dataSet: set)
-            self.dayLineChart.data = data
+            let data = BarChartData(dataSet: set)
+            self.dayBarChart.data = data
         }
+    }
+    
+    func getDataForDay()-> [[String:String]] {
+        var startDayFound = false
+        var i = 0
+        var dayData = [[String:String]]()
+        
+        while !startDayFound {
+            startDayFound = self.importedFileData[i]["Date Time"]!.contains(" 00:0")
+            i += 1
+        }
+        
+        for j in 0..<288 {
+            dayData.append(self.importedFileData[i-1+j])
+            //print("oneDaysData: \(dayData[j])")
+        }
+        
+        return dayData
+    }
+    
+    func getStateAverages(dayData: [[String:String]])-> [Double] {
+        var hourlyStateAverages = [Double]()
+        var average: Double = 0.00;
+        
+        for i in 0..<24 {
+            average = 0
+            for j in 0..<12 {
+                if let state = dayData[(i*12)+j]["State"] {
+                    print("State at \(String(describing: dayData[(i*12)+j]["Date Time"])) = \(state)")
+                    average += Double(state) ?? 0
+                }
+            }
+            hourlyStateAverages.append(average/12)
+            print("State average for \(i):00 = \(hourlyStateAverages[i])")
+        }
+        return hourlyStateAverages
     }
 }

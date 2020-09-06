@@ -74,11 +74,11 @@ class csvManager: NSObject {
         getStatusFromTemperature()
         formatDateTimeColumn()
         
-        for i in 1..<5 {
-            for (key, value) in data[i] {
-                print("\(key) = \(value)")
-            }
-        }
+//        for i in 1..<5 {
+//            for (key, value) in data[i] {
+//                print("\(key) = \(value)")
+//            }
+//        }
         return data
     }
     
@@ -93,7 +93,7 @@ class csvManager: NSObject {
                     if (flObjTemp != nil) && (flAmbTemp != nil) {
                         let flTempDiff = flObjTemp! - flAmbTemp!
                         var state: String = "0"
-                        if (flObjTemp!>23 && flAmbTemp!>3) || (flObjTemp!>30 && flAmbTemp!>30) {
+                        if (flTempDiff > (-0.21*flAmbTemp!) + 7) {
                             state = "1"
                         } else {
                             state = "0"
@@ -107,7 +107,6 @@ class csvManager: NSObject {
     }
     
     func formatDateTimeColumn()-> Void {
-        print("formatDateTimeColumn()")
         data[1]["Date Time"] = formatStartDateFromFileName(strFileName: fileName)
         for row in 2..<(data.count-1) {
             let prevDate = data[row - 1]["Date Time"] ?? ""
