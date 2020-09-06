@@ -16,6 +16,8 @@ class DayViewController: UIViewController, ChartViewDelegate {
     private var importedFileData = [[String:String]]()
     private var csvFile: MSGraphDriveItem?
     
+    @IBOutlet weak var displayDate: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         dayBarChart.delegate = self
@@ -37,22 +39,12 @@ class DayViewController: UIViewController, ChartViewDelegate {
             if !self.importedFileData.isEmpty {
                 var oneDaysData = [[String:String]]()
                 oneDaysData = self.getDataForDay()
+                let date = oneDaysData[0]["Date Time"]?.components(separatedBy: " 00:")
+                self.displayDate.text = date?[0]
                 
                 var dailyStateAverages = [Double]()
                 dailyStateAverages = self.getStateAverages(dayData: oneDaysData)
                 
-//                print("Data for one day")
-//                for k in 0..<288 {
-//                    for (key, value) in oneDaysData[k] {
-//                        print("\(key) = \(value)")
-//                    }
-//                }
-//                for index in 1..<oneDaysData.count {
-//                    let datapoint = oneDaysData[index]
-//                    if let objTemp = Double(datapoint["Object"]!) {
-//                        entries.append(BarChartDataEntry(x: Double(index), y: objTemp))
-//                    }
-//                }
                 for index in 1..<dailyStateAverages.count {
                     entries.append(BarChartDataEntry(x: Double(index), y: dailyStateAverages[index]))
                 }

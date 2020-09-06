@@ -118,10 +118,37 @@
                     <view key="view" contentMode="scaleToFill" id="gjL-rO-zzN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UEg-Aa-8Bw">
+                                <rect key="frame" x="189" y="113.5" width="36" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rif-aC-3OR">
+                                <rect key="frame" x="139" y="108" width="30" height="30"/>
+                                <state key="normal" title="&lt;"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P8L-QA-3fV">
+                                <rect key="frame" x="245" y="108" width="30" height="30"/>
+                                <state key="normal" title="&gt;"/>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="P8L-QA-3fV" firstAttribute="top" secondItem="A2m-7e-cwa" secondAttribute="top" constant="20" id="9CJ-4z-94V"/>
+                            <constraint firstItem="UEg-Aa-8Bw" firstAttribute="leading" secondItem="rif-aC-3OR" secondAttribute="trailing" constant="20" id="KqO-rB-vFt"/>
+                            <constraint firstItem="UEg-Aa-8Bw" firstAttribute="top" secondItem="A2m-7e-cwa" secondAttribute="top" constant="25.5" id="iqK-cn-j6Z"/>
+                            <constraint firstItem="UEg-Aa-8Bw" firstAttribute="centerX" secondItem="gjL-rO-zzN" secondAttribute="centerX" id="mSi-l2-qLI"/>
+                            <constraint firstItem="P8L-QA-3fV" firstAttribute="leading" secondItem="UEg-Aa-8Bw" secondAttribute="trailing" constant="20" id="oHG-Th-igo"/>
+                            <constraint firstItem="rif-aC-3OR" firstAttribute="top" secondItem="A2m-7e-cwa" secondAttribute="top" constant="20" id="rC4-G9-hBa"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="A2m-7e-cwa"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Day" id="b8O-wt-zeb"/>
+                    <connections>
+                        <outlet property="displayDate" destination="UEg-Aa-8Bw" id="URj-4m-kah"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="btv-hR-U0V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
