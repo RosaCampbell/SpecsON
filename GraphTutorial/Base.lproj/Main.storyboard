@@ -132,6 +132,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P8L-QA-3fV">
                                 <rect key="frame" x="245" y="108" width="30" height="30"/>
                                 <state key="normal" title="&gt;"/>
+                                <connections>
+                                    <action selector="forwardOneDay" destination="wlQ-0b-chh" eventType="touchUpInside" id="HTf-aC-mTl"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -147,7 +150,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Day" id="b8O-wt-zeb"/>
                     <connections>
-                        <outlet property="displayDate" destination="UEg-Aa-8Bw" id="URj-4m-kah"/>
+                        <outlet property="displayDate" destination="UEg-Aa-8Bw" id="SVj-wq-KgK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="btv-hR-U0V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
