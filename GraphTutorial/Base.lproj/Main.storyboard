@@ -128,6 +128,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rif-aC-3OR">
                                 <rect key="frame" x="139" y="108" width="30" height="30"/>
                                 <state key="normal" title="&lt;"/>
+                                <connections>
+                                    <action selector="backOneDay" destination="wlQ-0b-chh" eventType="touchUpInside" id="JWp-nE-nbI"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P8L-QA-3fV">
                                 <rect key="frame" x="245" y="108" width="30" height="30"/>
@@ -168,6 +171,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KZo-Ku-fUH">
                                 <rect key="frame" x="271.5" y="108" width="30" height="30"/>
                                 <state key="normal" title="&gt;"/>
+                                <connections>
+                                    <action selector="forwardOneWeek" destination="nd3-0T-NB3" eventType="touchUpInside" id="qoH-Fc-rA7"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date Range" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wnr-Dn-x73">
                                 <rect key="frame" x="162.5" y="113.5" width="89" height="20.5"/>
@@ -178,6 +184,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4bO-AU-iiH">
                                 <rect key="frame" x="112.5" y="108" width="30" height="30"/>
                                 <state key="normal" title="&lt;"/>
+                                <connections>
+                                    <action selector="backOneWeek" destination="nd3-0T-NB3" eventType="touchUpInside" id="fZ6-xF-uC4"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -195,6 +204,9 @@
                     <navigationItem key="navigationItem" id="dlD-iX-NE5">
                         <barButtonItem key="backBarButtonItem" title="Back" id="qLp-FB-V8T"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="displayWeeksDateRange" destination="wnr-Dn-x73" id="xJn-zN-hbL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6yD-mF-1ck" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

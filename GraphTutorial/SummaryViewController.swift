@@ -28,7 +28,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             self.importedFileData = tabBar.fileData
             self.csvFile = tabBar.csvFile
             
-            self.summaryLineChart.frame = CGRect(x: 0, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 40)
+            self.summaryLineChart.frame = CGRect(x: 100, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 300)
             self.summaryLineChart.center = self.view.center
             self.view.addSubview(self.summaryLineChart)
 
@@ -48,8 +48,10 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             }
 
             let set = LineChartDataSet(entries: entries)
-            set.colors = ChartColorTemplates.pastel()
+            set.setColors(UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0))
             set.drawCirclesEnabled = false
+            self.summaryLineChart.xAxis.drawGridLinesEnabled = false
+            self.summaryLineChart.rightAxis.drawGridLinesEnabled = false
             let data = LineChartData(dataSet: set)
             self.summaryLineChart.data = data
         }

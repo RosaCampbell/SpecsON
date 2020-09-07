@@ -20,13 +20,15 @@ class DayViewController: UIViewController, ChartViewDelegate {
     @IBOutlet weak var displayDate: UILabel!
     
     @IBAction func forwardOneDay() {
-        if day >= 1 {
+        if day < (importedFileData.count/288 - 1) {
             day += 1
         }
     }
     
     @IBAction func backOneDay() {
-        day -= 1
+        if day > 1 {
+            day -= 1
+        }
     }
     
     override func viewDidLoad() {
@@ -60,19 +62,28 @@ class DayViewController: UIViewController, ChartViewDelegate {
                     entries.append(BarChartDataEntry(x: Double(index), y: dailyStateAverages[index]))
                 }
             } else {
-                for i in 1..<12 {
+                for i in 1..<24 {
                     entries.append(BarChartDataEntry(x: Double(i), y: 0))
                 }
             }
 
             let set = BarChartDataSet(entries: entries)
-            set.colors = ChartColorTemplates.pastel()
+            set.setColors(UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0))
+            //r: 50, g: 115, b:186
+            set.drawValuesEnabled = false
+            self.dayBarChart.xAxis.drawGridLinesEnabled = false
+            self.dayBarChart.xAxis.drawAxisLineEnabled = false
+            self.dayBarChart.xAxis.drawLabelsEnabled = false
+            self.dayBarChart.rightAxis.drawGridLinesEnabled = false
+            self.dayBarChart.rightAxis.drawAxisLineEnabled = false
+            self.dayBarChart.rightAxis.drawLabelsEnabled = false
+            self.dayBarChart.legend.enabled = false
             let data = BarChartData(dataSet: set)
             self.dayBarChart.data = data
         }
     }
     
-    func getDataForDay()-> [[String:String]] {
+    private func getDataForDay()-> [[String:String]] {
         var startDayFound = 0
         var i = 1
         var dayData = [[String:String]]()
@@ -101,7 +112,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
         return dayData
     }
     
-    func getStateAverages(dayData: [[String:String]])-> [Double] {
+    private func getStateAverages(dayData: [[String:String]])-> [Double] {
         var hourlyStateAverages = [Double]()
         var average: Double = 0.00;
         
