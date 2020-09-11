@@ -38,16 +38,11 @@ class DayViewController: UIViewController, ChartViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //view.layer.cornerRadius?
-        newLayer.colors = [UIColor.black.cgColor, UIColor.darkGray.cgColor]
-//        newLayer.frame = view.frame
+        newLayer.colors = [UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0).cgColor, UIColor(red: 50.0/255.0, green: 115.0/255.0, blue: 186.0/255.0, alpha: 1.0).cgColor]
         newLayer.frame = CGRect(x: 20, y: view.frame.size.height - 200, width: view.frame.size.width - 40, height: 100)
-//        newLayer.frame = CGRect(x: 400, y: 20, width: view.frame.size.width - 20, height: 50)
-//        newLayer.frame = CGRect(x: view.frame.size.height - 250, y: 20, width: self.view.frame.size.width - 10, height: 100)
-//        view.layer.insertSublayer(newLayer, above: view)
+
         view.layer.addSublayer(newLayer)
-//        UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0)
-//        UIColor(red: 50.0/255.0, green: 115.0/255.0, blue: 186.0/255.0, alpha: 1.0)
+
         dayBarChart.delegate = self
     }
     
