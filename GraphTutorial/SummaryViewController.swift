@@ -16,9 +16,15 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private var importedFileData = [[String:String]]()
     private var csvFile: MSGraphDriveItem?
     
+    @IBOutlet public var averageDataView: AverageDataView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         summaryLineChart.delegate = self
+        let totalHours: String? = "Total"
+        let averageHours: String? = "Average"
+        averageDataView.totalHoursToday = totalHours
+        averageDataView.averageHoursPerDay = averageHours
     }
     
     override func viewDidLayoutSubviews() {

@@ -52,6 +52,7 @@ class csvManager: NSObject {
     
     
     func convertCSV(stringData:String, stringFileName: String) -> [[String:String]] {
+        print("convertCSV()")
         fileName = stringFileName
         let tableData = removeUnwantedHeaderInfo(totalString: stringData)
         let rows = cleanRows(stringData: tableData)
@@ -64,7 +65,6 @@ class csvManager: NSObject {
                 var newRow = [String:String]()
                 for index in 0..<fields.count{
                     newRow[columnTitles[index]] = fields[index]
-                    
                 }
                 data.append(newRow)
             }
@@ -73,16 +73,11 @@ class csvManager: NSObject {
         }
         getStatusFromTemperature()
         formatDateTimeColumn()
-        
-//        for i in 1..<5 {
-//            for (key, value) in data[i] {
-//                print("\(key) = \(value)")
-//            }
-//        }
         return data
     }
     
     func getStatusFromTemperature()-> Void {
+        print("getStatusFromTemperature()")
         columnTitles.append("Difference")
         columnTitles.append("State")
         for row in 1..<data.count {
@@ -107,6 +102,7 @@ class csvManager: NSObject {
     }
     
     func formatDateTimeColumn()-> Void {
+        print("formatDateTimeColumn()")
         data[1]["Date Time"] = formatStartDateFromFileName(strFileName: fileName)
         for row in 2..<(data.count-1) {
             let prevDate = data[row - 1]["Date Time"] ?? ""
@@ -132,6 +128,7 @@ class csvManager: NSObject {
     }
     
     func formatStartDateFromFileName(strFileName: String?) -> String {
+        print("formatStartDateFromFileName()")
         guard let fileName = strFileName else {
             return ""
         }

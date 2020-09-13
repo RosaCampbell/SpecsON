@@ -19,8 +19,6 @@ class BaseTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("BaseTabBarController viewDidLoad")
-        print("BaseTabBarController spinner.start")
         GraphManager.instance.getFileURL(fileId: csvFile?.entityId ?? "") { (fileContentsData: Data?, fileURL: String?, error: Error?) in
             print("BaseTabBarController: GraphManager.instance.getFileURL")
             guard let fileContents = fileContentsData, error == nil else {
@@ -45,6 +43,7 @@ class BaseTabBarController: UITabBarController {
             
             let csv = csvManager()
             self.fileData = csv.convertCSV(stringData: csv.readStringFromURL(stringURL: UnwrappedUrl), stringFileName: self.csvFile?.name ?? "nil")
+            print("csv in array format")
         }
     }
 }

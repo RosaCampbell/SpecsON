@@ -17,7 +17,9 @@ class DayViewController: UIViewController, ChartViewDelegate {
     private var importedFileData = [[String:String]]()
     private var csvFile: MSGraphDriveItem?
     private var day: Int = 1
-    let newLayer = CAGradientLayer()
+//    let newLayer = CAGradientLayer()
+//    let specsONLightBlue: UIColor = UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0)
+//    let specsONDarkBlue: UIColor = UIColor(red: 50.0/255.0, green: 115.0/255.0, blue: 186.0/255.0, alpha: 1.0)
     
     @IBOutlet weak var displayDate: UILabel!
 //    @IBOutlet weak var avHoursPerDay: UILabel!
@@ -38,17 +40,13 @@ class DayViewController: UIViewController, ChartViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        newLayer.colors = [UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0).cgColor, UIColor(red: 50.0/255.0, green: 115.0/255.0, blue: 186.0/255.0, alpha: 1.0).cgColor]
-        newLayer.frame = CGRect(x: 20, y: view.frame.size.height - 200, width: view.frame.size.width - 40, height: 100)
-
-        view.layer.addSublayer(newLayer)
+//        newLayer.colors = [specsONLightBlue.cgColor, specsONDarkBlue.cgColor]
+//        newLayer.frame = CGRect(x: 20, y: view.frame.size.height - 200, width: view.frame.size.width - 40, height: 100)
+//
+//        view.layer.addSublayer(newLayer)
 
         dayBarChart.delegate = self
     }
-    
-//    override func loadView() {
-//        self.view = AverageDataView(frame: UIScreen.main.bounds)
-//    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

@@ -219,10 +219,48 @@
                     <view key="view" contentMode="scaleToFill" id="ZMq-cH-j39">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lQV-xw-UXV" customClass="AverageDataView" customModule="SpecsON" customModuleProvider="target">
+                                <rect key="frame" x="20" y="693" width="374" height="100"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wT8-Yv-WXI">
+                                        <rect key="frame" x="8" y="8" width="42" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DZ1-p0-VDk">
+                                        <rect key="frame" x="8" y="71" width="42" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="tao-ks-cGS"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="averageHoursPerDayLabel" destination="DZ1-p0-VDk" id="Ef2-zf-Cuz"/>
+                                    <outlet property="totalHoursTodayLabel" destination="wT8-Yv-WXI" id="Pig-wa-LKz"/>
+                                </connections>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="lQV-xw-UXV" firstAttribute="centerX" secondItem="ZMq-cH-j39" secondAttribute="centerX" id="4n6-bX-6QU"/>
+                            <constraint firstItem="NhM-VC-CZd" firstAttribute="trailing" secondItem="lQV-xw-UXV" secondAttribute="trailing" constant="20" id="QLq-OU-Nmy"/>
+                            <constraint firstItem="NhM-VC-CZd" firstAttribute="bottom" secondItem="lQV-xw-UXV" secondAttribute="bottom" constant="20" id="gAp-uO-RdF"/>
+                            <constraint firstItem="lQV-xw-UXV" firstAttribute="leading" secondItem="NhM-VC-CZd" secondAttribute="leading" constant="20" id="ni3-En-8gL"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="NhM-VC-CZd"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Summary" id="bRm-Rj-Ejx"/>
+                    <connections>
+                        <outlet property="averageDataView" destination="lQV-xw-UXV" id="0pC-Sj-Z2T"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NlQ-8m-pnY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
