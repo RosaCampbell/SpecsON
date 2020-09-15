@@ -17,10 +17,10 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     private var csvFile: MSGraphDriveItem?
     private var week: Int = 1
     
+    @IBOutlet public var weekAvDataView: AverageDataView!
     @IBOutlet weak var displayWeeksDateRange: UILabel!
-    
     @IBAction func forwardOneWeek() {
-        if week < (importedFileData.count/(288*7)) {
+        if week < (importedFileData.count/(288*7) - 1) {
         week += 1
         }
     }
@@ -33,6 +33,8 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        weekAvDataView.totalHoursToday = "12"
+        weekAvDataView.averageHoursPerDay = "16"
         weekBarChart.delegate = self
     }
     

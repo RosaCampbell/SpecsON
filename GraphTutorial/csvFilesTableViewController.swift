@@ -78,7 +78,6 @@ class csvFilesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //tblCsvFiles.deselectRow(at: indexPath, animated: true)
         performSegue(withIdentifier: "showData", sender: self)
     }
     

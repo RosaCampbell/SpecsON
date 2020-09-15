@@ -59,8 +59,8 @@ class csvManager: NSObject {
         if rows.count > 0 {
             data = []
             columnTitles = cleanFields(oldString: rows.first!)
-            for row in rows{
-                let fields = cleanFields(oldString: row)
+            for row in 1..<rows.count {
+                let fields = cleanFields(oldString: rows[row])
                 if fields.count != columnTitles.count { continue }
                 var newRow = [String:String]()
                 for index in 0..<fields.count{
@@ -73,6 +73,12 @@ class csvManager: NSObject {
         }
         getStatusFromTemperature()
         formatDateTimeColumn()
+//        for i in 0..<data.count {
+//            for (key, value) in data[i] {
+//                print("\(key)= \(value)")
+//            }
+//            print("---------------------------")
+//        }
         return data
     }
     
@@ -80,7 +86,7 @@ class csvManager: NSObject {
         print("getStatusFromTemperature()")
         columnTitles.append("Difference")
         columnTitles.append("State")
-        for row in 1..<data.count {
+        for row in 0..<data.count {
             if let strObjTemp = data[row]["Object"] {
                 if let strAmbTemp = data[row]["Ambient"] {
                     let flObjTemp = Float(strObjTemp)
@@ -103,8 +109,8 @@ class csvManager: NSObject {
     
     func formatDateTimeColumn()-> Void {
         print("formatDateTimeColumn()")
-        data[1]["Date Time"] = formatStartDateFromFileName(strFileName: fileName)
-        for row in 2..<(data.count-1) {
+        data[0]["Date Time"] = formatStartDateFromFileName(strFileName: fileName)
+        for row in 1..<(data.count-1) {
             let prevDate = data[row - 1]["Date Time"] ?? ""
             data[row]["Date Time"] = addIntervalTo(strDate: prevDate)
         }

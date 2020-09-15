@@ -12,18 +12,14 @@ import Charts
 
 class DayViewController: UIViewController, ChartViewDelegate {
     
-//    var averageSummaryView: AverageSummaryView { return self.view as! AverageSummaryView}
     private var dayBarChart = BarChartView()
     private var importedFileData = [[String:String]]()
-    private var csvFile: MSGraphDriveItem?
     private var day: Int = 1
-//    let newLayer = CAGradientLayer()
-//    let specsONLightBlue: UIColor = UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0)
-//    let specsONDarkBlue: UIColor = UIColor(red: 50.0/255.0, green: 115.0/255.0, blue: 186.0/255.0, alpha: 1.0)
+    private var xAxisLabels: [String] = ["12 A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12 P", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
+    public var totalAvHoursPerDay: Double = 0
     
+    @IBOutlet public var dayAvDataView: AverageDataView!
     @IBOutlet weak var displayDate: UILabel!
-//    @IBOutlet weak var avHoursPerDay: UILabel!
-//    @IBOutlet weak var units: UILabel!
     
     @IBAction func forwardOneDay() {
         if day < (importedFileData.count/288 - 1) {
@@ -39,12 +35,6 @@ class DayViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        newLayer.colors = [specsONLightBlue.cgColor, specsONDarkBlue.cgColor]
-//        newLayer.frame = CGRect(x: 20, y: view.frame.size.height - 200, width: view.frame.size.width - 40, height: 100)
-//
-//        view.layer.addSublayer(newLayer)
-
         dayBarChart.delegate = self
     }
     
@@ -53,10 +43,10 @@ class DayViewController: UIViewController, ChartViewDelegate {
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
-            self.csvFile = tabBar.csvFile
+            self.dayAvDataView.totalHoursToday = String(format: "%.2f", tabBar.dayAverages[self.day-1])
+            self.dayAvDataView.averageHoursPerDay = self.getAvHoursPerDay(dayAverages: tabBar.dayAverages)
             
-            self.dayBarChart.frame = CGRect(x: 100, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 400)
-            self.dayBarChart.center = self.view.center
+            self.dayBarChart.frame = CGRect(x: 20, y: 140, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 350)
             self.view.addSubview(self.dayBarChart)
 
             var entries = [BarChartDataEntry]()
@@ -70,13 +60,11 @@ class DayViewController: UIViewController, ChartViewDelegate {
                 var dailyStateAverages = [Double]()
                 dailyStateAverages = self.getStateAverages(dayData: oneDaysData)
                 
-                for index in 1..<dailyStateAverages.count {
-                    entries.append(BarChartDataEntry(x: Double(index), y: dailyStateAverages[index]))
-//                    var totalAverageHoursPerDay
-//                    totalAverageHoursPerDay+= dailyStateAverages[index]
+                for j in 0..<dailyStateAverages.count {
+                    entries.append(BarChartDataEntry(x: Double(j), y: dailyStateAverages[j]))
                 }
             } else {
-                for i in 1..<24 {
+                for i in 0..<24 {
                     entries.append(BarChartDataEntry(x: Double(i), y: 0))
                 }
             }
@@ -87,7 +75,14 @@ class DayViewController: UIViewController, ChartViewDelegate {
             set.drawValuesEnabled = false
             self.dayBarChart.xAxis.drawGridLinesEnabled = false
             self.dayBarChart.xAxis.drawAxisLineEnabled = false
-            self.dayBarChart.xAxis.drawLabelsEnabled = false
+            self.dayBarChart.xAxis.drawLabelsEnabled = true
+            self.dayBarChart.xAxis.labelPosition = .bottom
+            self.dayBarChart.xAxis.valueFormatter = DefaultAxisValueFormatter(block: {(index, _) in
+                return self.xAxisLabels[Int(index)]
+            })
+            self.dayBarChart.xAxis.labelCount = 8
+            self.dayBarChart.leftAxis.axisMaximum = 1.0
+            self.dayBarChart.leftAxis.axisMinimum = 0.0
             self.dayBarChart.rightAxis.drawGridLinesEnabled = false
             self.dayBarChart.rightAxis.drawAxisLineEnabled = false
             self.dayBarChart.rightAxis.drawLabelsEnabled = false
@@ -97,7 +92,15 @@ class DayViewController: UIViewController, ChartViewDelegate {
         }
     }
     
-    private func getDataForDay()-> [[String:String]] {
+    private func getAvHoursPerDay(dayAverages: [Double])-> String {
+        var dayAverage = 0.00
+        for index in 0..<dayAverages.count {
+            dayAverage += dayAverages[index]
+        }
+        return String(format: "%.2f", dayAverage/Double(dayAverages.count))
+    }
+    
+    public func getDataForDay()-> [[String:String]] {
         var startDayFound = 0
         var i = 1
         var dayData = [[String:String]]()
@@ -117,16 +120,14 @@ class DayViewController: UIViewController, ChartViewDelegate {
             }
             i += 1
         }
-        print("i = \(i)")
         for j in 0..<288 {
             dayData.append(self.importedFileData[i-1+j])
-            //print("oneDaysData: \(dayData[j])")
         }
         
         return dayData
     }
     
-    private func getStateAverages(dayData: [[String:String]])-> [Double] {
+    public func getStateAverages(dayData: [[String:String]])-> [Double] {
         var hourlyStateAverages = [Double]()
         var average: Double = 0.00;
         
@@ -142,37 +143,3 @@ class DayViewController: UIViewController, ChartViewDelegate {
         return hourlyStateAverages
     }
 }
-
-//class AverageSummaryView: UIView {
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        setupViews()
-//        setupConstraints()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    func setupViews() {
-//        self.addSubview(contentView)
-//
-//    }
-//
-//    func setupConstraints() {
-//        self.translatesAutoresizingMaskIntoConstraints = false
-//        contentView.translatesAutoresizingMaskIntoConstraints = false
-//        contentView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10).isActive = true
-//        contentView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -110).isActive = true
-//        contentView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
-//        contentView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
-//    }
-//
-//    let contentView: UIView = {
-//        let view = UIView(frame: CGRect(x: 0, y: 300, width: 100, height: 50))
-//        view.layer.borderWidth = 1.0
-//        view.layer.borderColor = UIColor.lightGray.cgColor
-//        return view
-//    }()
-//
-//}
