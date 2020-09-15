@@ -19,11 +19,11 @@ class BaseTabBarController: UITabBarController {
     var numDays: Int = 0
     var hourAverages = [Double]()
     var dayAverages = [Double]()
+    var dates = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         GraphManager.instance.getFileURL(fileId: csvFile?.entityId ?? "") { (fileContentsData: Data?, fileURL: String?, error: Error?) in
-            print("BaseTabBarController: GraphManager.instance.getFileURL")
             guard let fileContents = fileContentsData, error == nil else {
                 // Show the error
                 let alert = UIAlertController(title: "Error getting file contents",
@@ -46,29 +46,28 @@ class BaseTabBarController: UITabBarController {
             
             let csv = csvManager()
             self.fileData = csv.convertCSV(stringData: csv.readStringFromURL(stringURL: UnwrappedUrl), stringFileName: self.csvFile?.name ?? "nil")
-            print("csv in array format")
             self.groupFileDataIntoDays()
-            print("Array sectioned into hourly and daily averages")
         }
     }
     
     public func groupFileDataIntoDays()-> Void {
-        print("groupFileDataIntoDays")
         var isStartDay = false
         var i = 0
         
-        print("Finding start day")
         while !isStartDay {
+            for i in 0..<dates.count {
+                dates[i] = ""
+            }
             if fileData[i]["Date Time"]!.contains(" 00:0") {
                 isStartDay = true
             }
             i += 1
         }
-        print("Start day found at: \(String(describing: fileData[i-1]["Date Time"]))")
         
         numDays = Int((Double(fileData.count - (i-1)))/288.00) // Truncates Double
         
         for day in 0..<numDays {
+            dates.append(fileData[(i-1) + day*288]["Date Time"]?.components(separatedBy: " 00:")[0] ?? "")
             var dayAverageState = 0.00
             for hour in 0..<24 {
                 var hourAverageState = 0.00

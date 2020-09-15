@@ -41,19 +41,19 @@ class AverageDataView: UIView {
         newLayer.frame = bounds
     }
     
-    var totalHoursToday: String? {
+    var currentHours: String? {
         didSet {
             totalTitleLabel.text = "TOTAL"
             totalUnitsLabel.text = "Hours"
-            totalHoursTodayLabel.text = totalHoursToday
+            totalHoursTodayLabel.text = currentHours
         }
     }
 
-    var averageHoursPerDay: String? {
+    var averageHours: String? {
         didSet {
             averageTitleLabel.text = "AVERAGE"
             averageUnitsLabel.text = "Hours/Day"
-            averageHoursPerDayLabel.text = averageHoursPerDay
+            averageHoursPerDayLabel.text = averageHours
         }
     }
 }

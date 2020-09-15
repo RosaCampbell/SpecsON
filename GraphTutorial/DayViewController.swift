@@ -15,6 +15,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
     private var dayBarChart = BarChartView()
     private var importedFileData = [[String:String]]()
     private var day: Int = 1
+    private var currentDate = String()
     private var xAxisLabels: [String] = ["12 A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12 P", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
     public var totalAvHoursPerDay: Double = 0
     
@@ -43,25 +44,19 @@ class DayViewController: UIViewController, ChartViewDelegate {
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
-            self.dayAvDataView.totalHoursToday = String(format: "%.2f", tabBar.dayAverages[self.day-1])
-            self.dayAvDataView.averageHoursPerDay = self.getAvHoursPerDay(dayAverages: tabBar.dayAverages)
+            self.dayAvDataView.currentHours = String(format: "%.2f", tabBar.dayAverages[self.day-1])
+            self.dayAvDataView.averageHours = self.getAvHours(dayAverages: tabBar.dayAverages)
+            self.currentDate = tabBar.dates[self.day-1]
             
-            self.dayBarChart.frame = CGRect(x: 20, y: 140, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 350)
+            self.dayBarChart.frame = CGRect(x: 10, y: 140, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 350)
             self.view.addSubview(self.dayBarChart)
 
             var entries = [BarChartDataEntry]()
 
             if !self.importedFileData.isEmpty {
-                var oneDaysData = [[String:String]]()
-                oneDaysData = self.getDataForDay()
-                let date = oneDaysData[0]["Date Time"]?.components(separatedBy: " 00:")
-                self.displayDate.text = date?[0]
-                
-                var dailyStateAverages = [Double]()
-                dailyStateAverages = self.getStateAverages(dayData: oneDaysData)
-                
-                for j in 0..<dailyStateAverages.count {
-                    entries.append(BarChartDataEntry(x: Double(j), y: dailyStateAverages[j]))
+                self.displayDate.text = self.currentDate
+                for j in 0..<24 {
+                    entries.append(BarChartDataEntry(x: Double(j), y: tabBar.hourAverages[(self.day-1)*24+j]))
                 }
             } else {
                 for i in 0..<24 {
@@ -92,54 +87,11 @@ class DayViewController: UIViewController, ChartViewDelegate {
         }
     }
     
-    private func getAvHoursPerDay(dayAverages: [Double])-> String {
+    private func getAvHours(dayAverages: [Double])-> String {
         var dayAverage = 0.00
         for index in 0..<dayAverages.count {
             dayAverage += dayAverages[index]
         }
         return String(format: "%.2f", dayAverage/Double(dayAverages.count))
-    }
-    
-    public func getDataForDay()-> [[String:String]] {
-        var startDayFound = 0
-        var i = 1
-        var dayData = [[String:String]]()
-        
-        while startDayFound != day {
-            var isSameDay = false
-            
-            let preDay = self.importedFileData[i]["Date Time"]!.components(separatedBy: " 00:")[0]
-            let currentDay = self.importedFileData[i-1]["Date Time"]!.components(separatedBy: " 00:")[0]
-            
-            if preDay == currentDay {
-                isSameDay = true
-            }
-             
-            if (self.importedFileData[i]["Date Time"]!.contains(" 00:0") && !isSameDay) {
-                startDayFound += 1
-            }
-            i += 1
-        }
-        for j in 0..<288 {
-            dayData.append(self.importedFileData[i-1+j])
-        }
-        
-        return dayData
-    }
-    
-    public func getStateAverages(dayData: [[String:String]])-> [Double] {
-        var hourlyStateAverages = [Double]()
-        var average: Double = 0.00;
-        
-        for i in 0..<24 {
-            average = 0
-            for j in 0..<12 {
-                if let state = dayData[(i*12)+j]["State"] {
-                    average += Double(state) ?? 0
-                }
-            }
-            hourlyStateAverages.append(average/12)
-        }
-        return hourlyStateAverages
     }
 }

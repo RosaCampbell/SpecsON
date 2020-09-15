@@ -14,8 +14,8 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     
     private var weekBarChart = BarChartView()
     private var importedFileData = [[String:String]]()
-    private var csvFile: MSGraphDriveItem?
     private var week: Int = 1
+    private var xAxisLabels: [String] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     
     @IBOutlet public var weekAvDataView: AverageDataView!
     @IBOutlet weak var displayWeeksDateRange: UILabel!
@@ -33,8 +33,6 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        weekAvDataView.totalHoursToday = "12"
-        weekAvDataView.averageHoursPerDay = "16"
         weekBarChart.delegate = self
     }
     
@@ -43,10 +41,10 @@ class WeekViewController: UIViewController, ChartViewDelegate {
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
-            self.csvFile = tabBar.csvFile
+            self.weekAvDataView.currentHours = String(format: "%.2f", tabBar.dayAverages[self.week-1])
+            self.weekAvDataView.averageHours = self.getAvHours(weekAverages: tabBar.dayAverages)
             
-            self.weekBarChart.frame = CGRect(x: 100, y: 20, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 300)
-            self.weekBarChart.center = self.view.center
+            self.weekBarChart.frame = CGRect(x: 10, y: 140, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 350)
             self.view.addSubview(self.weekBarChart)
 
             var entries = [BarChartDataEntry]()
@@ -75,13 +73,29 @@ class WeekViewController: UIViewController, ChartViewDelegate {
             set.setColors(UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0))
             set.drawValuesEnabled = false
             self.weekBarChart.xAxis.drawGridLinesEnabled = false
+            self.weekBarChart.xAxis.drawAxisLineEnabled = false
+            self.weekBarChart.xAxis.drawLabelsEnabled = true
+            self.weekBarChart.xAxis.labelPosition = .bottom
+            self.weekBarChart.xAxis.valueFormatter = DefaultAxisValueFormatter(block: {(index, _) in
+                return self.xAxisLabels[Int(index)]
+            })
+            self.weekBarChart.xAxis.labelCount = 7
+            self.weekBarChart.leftAxis.axisMaximum = 1.0
+            self.weekBarChart.leftAxis.axisMinimum = 0.0
             self.weekBarChart.rightAxis.drawGridLinesEnabled = false
             self.weekBarChart.rightAxis.drawLabelsEnabled = false
-            self.weekBarChart.xAxis.drawLabelsEnabled = false
             self.weekBarChart.legend.enabled = false
             let data = BarChartData(dataSet: set)
             self.weekBarChart.data = data
         }
+    }
+    
+    private func getAvHours(weekAverages: [Double])-> String {
+        var weekAverage = 0.00
+        for index in 0..<weekAverages.count {
+            weekAverage += weekAverages[index]
+        }
+        return String(format: "%.2f", weekAverage/Double(weekAverages.count))
     }
     
     func getDayOfWeek(_ today:String) -> Int? {
@@ -114,7 +128,6 @@ class WeekViewController: UIViewController, ChartViewDelegate {
             }
             i += 1
         }
-        print("i = \(i)")
         for j in 0..<(288*7) {
             weekData.append(self.importedFileData[i-1+j])
             //print("oneDaysData: \(dayData[j])")

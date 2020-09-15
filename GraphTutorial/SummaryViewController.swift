@@ -21,8 +21,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         summaryLineChart.delegate = self
-        averageDataView.totalHoursToday = "1"
-        averageDataView.averageHoursPerDay = "3"
+        averageDataView.currentHours = "1"
+        averageDataView.averageHours = "3"
     }
     
     override func viewDidLayoutSubviews() {
