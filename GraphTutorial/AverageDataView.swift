@@ -52,8 +52,13 @@ class AverageDataView: UIView {
     var averageHours: String? {
         didSet {
             averageTitleLabel.text = "AVERAGE"
-            averageUnitsLabel.text = "Hours/Day"
             averageHoursPerDayLabel.text = averageHours
+        }
+    }
+    
+    var averageUnits: String? {
+        didSet {
+            averageUnitsLabel.text = averageUnits
         }
     }
 }

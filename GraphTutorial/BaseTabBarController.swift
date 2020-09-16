@@ -17,9 +17,13 @@ class BaseTabBarController: UITabBarController {
     var fileData = [[String:String]]()
     var csvFile: MSGraphDriveItem?
     var numDays: Int = 0
+    var numWeeks: Int = 0
     var hourAverages = [Double]()
     var dayAverages = [Double]()
+    var weekAverages = [Double]()
     var dates = [String]()
+    var weekDates = [String]()
+    var startOfFirstFullWeek = 0;
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +51,7 @@ class BaseTabBarController: UITabBarController {
             let csv = csvManager()
             self.fileData = csv.convertCSV(stringData: csv.readStringFromURL(stringURL: UnwrappedUrl), stringFileName: self.csvFile?.name ?? "nil")
             self.groupFileDataIntoDays()
+            self.groupDataIntoWeeks()
         }
     }
     
@@ -79,7 +84,48 @@ class BaseTabBarController: UITabBarController {
                 hourAverages.append(hourAverageState/12.00)
                 dayAverageState += hourAverages[day*24 + hour]
             }
-            dayAverages.append(dayAverageState/24.00)
+            dayAverages.append(dayAverageState)
+        }
+    }
+    
+    func getDayOfWeek(_ today:String) -> Int? {
+        
+        let formatter  = DateFormatter()
+        formatter.dateFormat = "MMM dd, yyyy"
+        guard let todayDate = formatter.date(from: today) else { return nil }
+        let myCalendar = Calendar(identifier: .gregorian)
+        let weekDay = myCalendar.component(.weekday, from: todayDate)
+        print("getDayOfWeek: weekday = \(weekDay)")
+        return weekDay
+    }
+    
+    public func groupDataIntoWeeks()-> Void {
+        print("groupDataIntoWeeks()")
+        var startOfWeekFound = false
+        var i = 0
+        
+        while !startOfWeekFound {
+            print("dates[i] = \(dates[i])")
+            if let weekday = getDayOfWeek(dates[i]) {
+                if weekday == 2 { // 2: Monday
+                    startOfWeekFound = true
+                    print("start of week found at \(dates[i])")
+                }
+            }
+            i += 1
+        }
+        
+        numWeeks = Int((Double(dates.count - i)/7.00))
+        startOfFirstFullWeek = i-1
+        for week in 0..<numWeeks {
+            var sumOfHoursForWeek = 0.00
+            for day in 0..<7 {
+                weekDates.append(dates[(i-1) + week*7 + day])
+                print("weekDates: \(dates[(i-1) + week*7 + day])")
+                sumOfHoursForWeek += dayAverages[(i-1) + (week*7) + day]
+            }
+            print("Sum of hours for week = \(sumOfHoursForWeek)")
+            weekAverages.append(sumOfHoursForWeek)
         }
     }
 }

@@ -23,6 +23,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         summaryLineChart.delegate = self
         averageDataView.currentHours = "1"
         averageDataView.averageHours = "3"
+        averageDataView.layer.cornerRadius = 5
+        averageDataView.layer.borderWidth = 0
+        averageDataView.layer.masksToBounds = true
     }
     
     override func viewDidLayoutSubviews() {

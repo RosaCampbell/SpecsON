@@ -36,6 +36,10 @@ class DayViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dayAvDataView.layer.cornerRadius = 5
+        dayAvDataView.layer.borderWidth = 0
+        dayAvDataView.layer.masksToBounds = true
+        
         dayBarChart.delegate = self
     }
     
@@ -44,8 +48,9 @@ class DayViewController: UIViewController, ChartViewDelegate {
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
-            self.dayAvDataView.currentHours = String(format: "%.2f", tabBar.dayAverages[self.day-1])
-            self.dayAvDataView.averageHours = self.getAvHours(dayAverages: tabBar.dayAverages)
+            self.dayAvDataView.currentHours = tabBar.dayAverages[self.day-1].cleanValue
+            self.dayAvDataView.averageHours = self.getAvHours(dayAverages: tabBar.dayAverages).cleanValue
+            self.dayAvDataView.averageUnits = "Hours/Day"
             self.currentDate = tabBar.dates[self.day-1]
             
             self.dayBarChart.frame = CGRect(x: 10, y: 140, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 350)
@@ -87,11 +92,19 @@ class DayViewController: UIViewController, ChartViewDelegate {
         }
     }
     
-    private func getAvHours(dayAverages: [Double])-> String {
+    private func getAvHours(dayAverages: [Double])-> Double {
         var dayAverage = 0.00
         for index in 0..<dayAverages.count {
             dayAverage += dayAverages[index]
         }
-        return String(format: "%.2f", dayAverage/Double(dayAverages.count))
+        return dayAverage/Double(dayAverages.count)
+    }
+}
+
+extension Double
+{
+    var cleanValue: String
+    {
+        return self.truncatingRemainder(dividingBy: Double(1)) < 0.25 ? String(format: "%.0f", self) : String(format: "%.2f", self)
     }
 }
