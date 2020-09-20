@@ -29,6 +29,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     @IBOutlet public var endDateInput: UITextField!
     private var startDatePicker: UIDatePicker?
     private var endDatePicker: UIDatePicker?
+    private var dataReadFlag: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +39,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         endDatePicker?.datePickerMode = .dateAndTime
         startDateInput.inputView = startDatePicker
         endDateInput.inputView = endDatePicker
-        startDatePicker?.addTarget(self, action: #selector(SummaryViewController.dateChanged(datePicker:)), for: .valueChanged)
-        endDatePicker?.addTarget(self, action: #selector(SummaryViewController.dateChanged(datePicker:)), for: .valueChanged)
+        startDatePicker?.addTarget(self, action: #selector(SummaryViewController.startDateChanged(datePicker:)), for: .valueChanged)
+        endDatePicker?.addTarget(self, action: #selector(SummaryViewController.endDateChanged(datePicker:)), for: .valueChanged)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(SummaryViewController.viewTapped(gestureRecogniser:)))
         view.addGestureRecognizer(tapGesture)
         
@@ -75,6 +76,17 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             var entries = [ChartDataEntry]()
 
             if !self.avHoursPerHour.isEmpty {
+                self.dataReadFlag += 1
+                if self.dataReadFlag == 1 {
+                    self.startDateInput.text = tabBar.dates.first! + " 00:00"
+                    self.endDateInput.text = tabBar.dates.last! + " 00:00"
+                    let limitsDateFormatter = DateFormatter()
+                    limitsDateFormatter.dateFormat = "MMM dd, yyyy"
+                    self.startDatePicker?.minimumDate = limitsDateFormatter.date(from: tabBar.dates.first ?? "")
+                    self.startDatePicker?.maximumDate = limitsDateFormatter.date(from: tabBar.dates.last ?? "")
+                    self.endDatePicker?.maximumDate = limitsDateFormatter.date(from: tabBar.dates.last ?? "")
+                    self.endDatePicker?.minimumDate = limitsDateFormatter.date(from: tabBar.dates.first ?? "")
+                }
                 self.summaryDayView.valueLabel.text = String(self.getAvHours(averages: tabBar.dayAverages).cleanValue)
                 self.summaryWeekView.valueLabel.text = String(self.getAvHours(averages: tabBar.weekAverages).cleanValue)
                 for hour in 0..<self.avHoursPerHour.count {
@@ -125,12 +137,23 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     @objc func viewTapped(gestureRecogniser: UITapGestureRecognizer ) {
         view.endEditing(true)
+//        trimDataToWakingHours()
     }
     
-    @objc func dateChanged(datePicker: UIDatePicker) {
+    @objc func startDateChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/YYYY HH:mm"
+        dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
         startDateInput.text = dateFormatter.string(from: datePicker.date)
+//        view.endEditing(true)
+    }
+    @objc func endDateChanged(datePicker: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
+        endDateInput.text = dateFormatter.string(from: datePicker.date)
         view.endEditing(true)
     }
+    
+//    private func trimDataToWakingHours()-> Void {
+//        BaseTabBarController.
+//    }
 }

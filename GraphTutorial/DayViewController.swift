@@ -20,6 +20,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
     public var totalAvHoursPerDay: Double = 0
     
     @IBOutlet public var dayAvDataView: AverageDataView!
+    @IBOutlet public var dayGraphView: UIView!
     @IBOutlet weak var displayDate: UILabel!
     
     @IBAction func forwardOneDay() {
@@ -45,7 +46,6 @@ class DayViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        print("DayViewController: viewDidLayoutSubviews")
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
@@ -56,8 +56,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
                 self.currentDate = tabBar.dates[self.day-1]
             }
             
-            
-            self.dayBarChart.frame = CGRect(x: 10, y: 140, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 350)
+            self.dayBarChart.frame = CGRect(x: self.dayGraphView.frame.origin.x, y: self.dayGraphView.frame.origin.y, width: self.dayGraphView.bounds.width, height: self.dayGraphView.bounds.height)
             self.view.addSubview(self.dayBarChart)
 
             var entries = [BarChartDataEntry]()

@@ -21,6 +21,8 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     
     @IBOutlet public var weekAvDataView: AverageDataView!
     @IBOutlet weak var displayWeeksDateRange: UILabel!
+    @IBOutlet public var weekGraphView: UIView!
+    
     @IBAction func forwardOneWeek() {
         if week < (importedFileData.count/(288*7) - 1) {
         week += 1
@@ -51,7 +53,7 @@ class WeekViewController: UIViewController, ChartViewDelegate {
             self.weekAvDataView.currentHours = tabBar.weekAverages[self.week - 1].cleanValue
             self.weekAvDataView.averageHours = self.getAvHoursPerWeek(weekAverages: tabBar.weekAverages).cleanValue
             self.weekAvDataView.averageUnits = "Hours/Week"
-            self.weekBarChart.frame = CGRect(x: 10, y: 140, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 350)
+            self.weekBarChart.frame = CGRect(x: self.weekGraphView.frame.origin.x, y: self.weekGraphView.frame.origin.y, width: self.weekGraphView.bounds.width, height: self.weekGraphView.bounds.height)
             self.view.addSubview(self.weekBarChart)
 
             var entries = [BarChartDataEntry]()

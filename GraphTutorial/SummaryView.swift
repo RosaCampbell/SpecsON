@@ -28,14 +28,12 @@ class SummaryView: UIView {
     }
     
     private func setupView() {
-        print("SummaryView: setupView")
         gradientLayer.colors = [specsONLightBlue.cgColor, specsONDarkBlue.cgColor]
         gradientLayer.frame = bounds
         layer.insertSublayer(gradientLayer, at: 0)
     }
     
     override func layoutSubviews() {
-        print("SummaryView: layoutSubviews")
         super.layoutSubviews()
         gradientLayer.frame = bounds
     }

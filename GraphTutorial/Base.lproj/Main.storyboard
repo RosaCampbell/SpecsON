@@ -204,25 +204,33 @@
                                     <outlet property="totalUnitsLabel" destination="Pge-wt-Wso" id="QmG-T4-NKv"/>
                                 </connections>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rkJ-mT-62P">
+                                <rect key="frame" x="20" y="158" width="374" height="513"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="rkJ-mT-62P" firstAttribute="top" secondItem="rif-aC-3OR" secondAttribute="bottom" constant="20" id="1AN-5n-82l"/>
                             <constraint firstItem="P8L-QA-3fV" firstAttribute="top" secondItem="A2m-7e-cwa" secondAttribute="top" constant="20" id="9CJ-4z-94V"/>
                             <constraint firstItem="xay-eK-5kh" firstAttribute="centerX" secondItem="gjL-rO-zzN" secondAttribute="centerX" id="APU-Lh-w7C"/>
                             <constraint firstItem="xay-eK-5kh" firstAttribute="leading" secondItem="A2m-7e-cwa" secondAttribute="leading" constant="20" id="C2H-ES-xX6"/>
                             <constraint firstItem="A2m-7e-cwa" firstAttribute="bottom" secondItem="xay-eK-5kh" secondAttribute="bottom" constant="20" id="Gn5-ga-oIQ"/>
                             <constraint firstItem="UEg-Aa-8Bw" firstAttribute="leading" secondItem="rif-aC-3OR" secondAttribute="trailing" constant="20" id="KqO-rB-vFt"/>
+                            <constraint firstItem="A2m-7e-cwa" firstAttribute="trailing" secondItem="rkJ-mT-62P" secondAttribute="trailing" constant="20" id="VTq-ZI-PcM"/>
                             <constraint firstItem="A2m-7e-cwa" firstAttribute="trailing" secondItem="xay-eK-5kh" secondAttribute="trailing" constant="20" id="Zoo-8h-Pvw"/>
                             <constraint firstItem="UEg-Aa-8Bw" firstAttribute="top" secondItem="A2m-7e-cwa" secondAttribute="top" constant="25.5" id="iqK-cn-j6Z"/>
+                            <constraint firstItem="xay-eK-5kh" firstAttribute="top" secondItem="rkJ-mT-62P" secondAttribute="bottom" constant="20" id="lYc-1j-aC0"/>
                             <constraint firstItem="UEg-Aa-8Bw" firstAttribute="centerX" secondItem="gjL-rO-zzN" secondAttribute="centerX" id="mSi-l2-qLI"/>
                             <constraint firstItem="P8L-QA-3fV" firstAttribute="leading" secondItem="UEg-Aa-8Bw" secondAttribute="trailing" constant="20" id="oHG-Th-igo"/>
                             <constraint firstItem="rif-aC-3OR" firstAttribute="top" secondItem="A2m-7e-cwa" secondAttribute="top" constant="20" id="rC4-G9-hBa"/>
+                            <constraint firstItem="rkJ-mT-62P" firstAttribute="leading" secondItem="A2m-7e-cwa" secondAttribute="leading" constant="20" id="z20-7x-nZP"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="A2m-7e-cwa"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Day" selectedImage="square.split.2x1.fill" catalog="system" id="b8O-wt-zeb"/>
                     <connections>
                         <outlet property="dayAvDataView" destination="xay-eK-5kh" id="xuh-BN-CgE"/>
+                        <outlet property="dayGraphView" destination="rkJ-mT-62P" id="7Lo-cH-YFI"/>
                         <outlet property="displayDate" destination="UEg-Aa-8Bw" id="SVj-wq-KgK"/>
                     </connections>
                 </viewController>
@@ -323,16 +331,24 @@
                                     <outlet property="totalUnitsLabel" destination="VkL-hm-aO7" id="hxe-Lj-XTQ"/>
                                 </connections>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S5y-Vk-3rF">
+                                <rect key="frame" x="20" y="158" width="374" height="513"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="wnr-Dn-x73" firstAttribute="centerX" secondItem="eUu-55-MB9" secondAttribute="centerX" id="4b9-Jt-kgR"/>
+                            <constraint firstItem="S5y-Vk-3rF" firstAttribute="top" secondItem="KZo-Ku-fUH" secondAttribute="bottom" constant="20" id="7VF-26-JZ6"/>
                             <constraint firstItem="4bO-AU-iiH" firstAttribute="top" secondItem="Btg-pT-USj" secondAttribute="top" constant="20" id="83Y-Wp-KXV"/>
                             <constraint firstItem="Btg-pT-USj" firstAttribute="bottom" secondItem="1Gm-nq-gup" secondAttribute="bottom" constant="20" id="A71-hB-Cug"/>
+                            <constraint firstItem="Btg-pT-USj" firstAttribute="trailing" secondItem="S5y-Vk-3rF" secondAttribute="trailing" constant="20" id="Flx-Hh-8HC"/>
                             <constraint firstItem="wnr-Dn-x73" firstAttribute="leading" secondItem="4bO-AU-iiH" secondAttribute="trailing" constant="20" id="HAf-UQ-xmI"/>
                             <constraint firstItem="Btg-pT-USj" firstAttribute="trailing" secondItem="1Gm-nq-gup" secondAttribute="trailing" constant="20" id="HX2-DR-Vw1"/>
+                            <constraint firstItem="S5y-Vk-3rF" firstAttribute="leading" secondItem="Btg-pT-USj" secondAttribute="leading" constant="20" id="VXa-AF-5ii"/>
                             <constraint firstItem="1Gm-nq-gup" firstAttribute="leading" secondItem="Btg-pT-USj" secondAttribute="leading" constant="20" id="flB-ZS-23b"/>
                             <constraint firstItem="wnr-Dn-x73" firstAttribute="top" secondItem="Btg-pT-USj" secondAttribute="top" constant="25.25" id="h29-pv-JG5"/>
+                            <constraint firstItem="1Gm-nq-gup" firstAttribute="top" secondItem="S5y-Vk-3rF" secondAttribute="bottom" constant="20" id="i43-zI-Od7"/>
                             <constraint firstItem="1Gm-nq-gup" firstAttribute="centerX" secondItem="eUu-55-MB9" secondAttribute="centerX" id="taX-N0-zPB"/>
                             <constraint firstItem="KZo-Ku-fUH" firstAttribute="leading" secondItem="wnr-Dn-x73" secondAttribute="trailing" constant="20" id="vBL-uO-5B3"/>
                             <constraint firstItem="KZo-Ku-fUH" firstAttribute="top" secondItem="Btg-pT-USj" secondAttribute="top" constant="20" id="yQm-LJ-5SC"/>
@@ -346,6 +362,7 @@
                     <connections>
                         <outlet property="displayWeeksDateRange" destination="wnr-Dn-x73" id="xJn-zN-hbL"/>
                         <outlet property="weekAvDataView" destination="1Gm-nq-gup" id="Bjj-Ju-NcC"/>
+                        <outlet property="weekGraphView" destination="S5y-Vk-3rF" id="Y6i-63-32g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6yD-mF-1ck" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -455,24 +472,24 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jLl-RC-oBe">
-                                <rect key="frame" x="66" y="567" width="340" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Jan 1, 2020 00:00" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jLl-RC-oBe">
+                                <rect key="frame" x="255" y="567" width="139" height="22"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TaX-de-Gjv">
-                                <rect key="frame" x="57.5" y="609" width="348.5" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Jan 1, 2020 00:00" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TaX-de-Gjv">
+                                <rect key="frame" x="255" y="597" width="139" height="22"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kD2-iV-Cd1">
-                                <rect key="frame" x="20" y="572.5" width="38" height="21"/>
+                                <rect key="frame" x="20" y="567.5" width="38" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="End" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0fI-vI-fkJ">
-                                <rect key="frame" x="20" y="614.5" width="29.5" height="21"/>
+                                <rect key="frame" x="20" y="597.5" width="29.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -482,8 +499,6 @@
                         <constraints>
                             <constraint firstItem="mEB-XO-IeF" firstAttribute="top" secondItem="ZEB-ew-Ilw" secondAttribute="bottom" constant="8" id="33a-67-qcX"/>
                             <constraint firstItem="zbY-F1-YMe" firstAttribute="leading" secondItem="NhM-VC-CZd" secondAttribute="leading" constant="20" id="4VO-bz-qC1"/>
-                            <constraint firstItem="jLl-RC-oBe" firstAttribute="leading" secondItem="kD2-iV-Cd1" secondAttribute="trailing" constant="8" id="IsJ-TB-Dzs"/>
-                            <constraint firstItem="TaX-de-Gjv" firstAttribute="leading" secondItem="0fI-vI-fkJ" secondAttribute="trailing" constant="8" id="IyI-Bb-XYW"/>
                             <constraint firstItem="TaX-de-Gjv" firstAttribute="top" secondItem="jLl-RC-oBe" secondAttribute="bottom" constant="8" id="NAT-gU-Y84"/>
                             <constraint firstItem="Ldw-J7-pQt" firstAttribute="top" secondItem="zbY-F1-YMe" secondAttribute="bottom" constant="8" id="Njq-US-0s3"/>
                             <constraint firstItem="zbY-F1-YMe" firstAttribute="top" secondItem="mEB-XO-IeF" secondAttribute="bottom" constant="8" id="QKS-9u-KDV"/>
@@ -494,12 +509,12 @@
                             <constraint firstItem="jLl-RC-oBe" firstAttribute="top" secondItem="Ldw-J7-pQt" secondAttribute="bottom" constant="8" id="d84-gc-xRp"/>
                             <constraint firstItem="NhM-VC-CZd" firstAttribute="trailing" secondItem="ZEB-ew-Ilw" secondAttribute="trailing" constant="20" id="glZ-wD-p5a"/>
                             <constraint firstItem="Ldw-J7-pQt" firstAttribute="leading" secondItem="NhM-VC-CZd" secondAttribute="leading" constant="20" id="jjP-eM-gSV"/>
-                            <constraint firstItem="NhM-VC-CZd" firstAttribute="trailing" secondItem="jLl-RC-oBe" secondAttribute="trailing" constant="8" id="jrT-Tn-uO1"/>
+                            <constraint firstItem="NhM-VC-CZd" firstAttribute="trailing" secondItem="jLl-RC-oBe" secondAttribute="trailing" constant="20" id="jrT-Tn-uO1"/>
                             <constraint firstItem="mEB-XO-IeF" firstAttribute="leading" secondItem="NhM-VC-CZd" secondAttribute="leading" constant="20" id="kQ9-jK-k87"/>
                             <constraint firstItem="kD2-iV-Cd1" firstAttribute="firstBaseline" secondItem="jLl-RC-oBe" secondAttribute="firstBaseline" id="lhL-ZX-f0X"/>
                             <constraint firstItem="TaX-de-Gjv" firstAttribute="firstBaseline" secondItem="0fI-vI-fkJ" secondAttribute="firstBaseline" id="mRg-5c-d6M"/>
                             <constraint firstItem="Yo7-fa-sTe" firstAttribute="top" secondItem="NhM-VC-CZd" secondAttribute="top" constant="8" id="nXZ-IK-Zui"/>
-                            <constraint firstItem="NhM-VC-CZd" firstAttribute="trailing" secondItem="TaX-de-Gjv" secondAttribute="trailing" constant="8" id="oCc-3g-jHa"/>
+                            <constraint firstItem="NhM-VC-CZd" firstAttribute="trailing" secondItem="TaX-de-Gjv" secondAttribute="trailing" constant="20" id="oCc-3g-jHa"/>
                             <constraint firstItem="0fI-vI-fkJ" firstAttribute="leading" secondItem="NhM-VC-CZd" secondAttribute="leading" constant="20" id="sTq-zP-wsn"/>
                             <constraint firstItem="Yo7-fa-sTe" firstAttribute="leading" secondItem="NhM-VC-CZd" secondAttribute="leading" constant="20" id="wMw-px-Z8W"/>
                             <constraint firstItem="kD2-iV-Cd1" firstAttribute="leading" secondItem="NhM-VC-CZd" secondAttribute="leading" constant="20" id="yYZ-VR-mFl"/>

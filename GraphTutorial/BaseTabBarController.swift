@@ -28,9 +28,7 @@ class BaseTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("BaseTabBarController: viewDidLoad")
         GraphManager.instance.getFileURL(fileId: csvFile?.entityId ?? "") { (fileContentsData: Data?, fileURL: String?, error: Error?) in
-            print("BaseTabBarController dealing with the file")
             guard let fileContents = fileContentsData, error == nil else {
                 // Show the error
                 let alert = UIAlertController(title: "Error getting file contents",
