@@ -24,9 +24,11 @@
 		9869EFA224F85F290003287B /* DayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9869EFA124F85F290003287B /* DayViewController.swift */; };
 		9869EFA424F85F360003287B /* WeekViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9869EFA324F85F360003287B /* WeekViewController.swift */; };
 		9869EFA824FEEE600003287B /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9869EFA724FEEE600003287B /* BaseTabBarController.swift */; };
+		9878C4662512F6B8002422C6 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9878C4652512F6B8002422C6 /* SummaryView.swift */; };
 		98ACE7B324F7557800CC6DE5 /* csvFilesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ACE7B224F7557800CC6DE5 /* csvFilesTableViewController.swift */; };
 		98ACE7B524F760D600CC6DE5 /* csvFilesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ACE7B424F760D600CC6DE5 /* csvFilesTableViewCell.swift */; };
 		98ACE7B724F7713000CC6DE5 /* SummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ACE7B624F7713000CC6DE5 /* SummaryViewController.swift */; };
+		98E4EBD62516E08F002AB3F3 /* SummaryGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E4EBD52516E08F002AB3F3 /* SummaryGraphView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,9 +54,11 @@
 		9869EFA124F85F290003287B /* DayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
 		9869EFA324F85F360003287B /* WeekViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekViewController.swift; sourceTree = "<group>"; };
 		9869EFA724FEEE600003287B /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
+		9878C4652512F6B8002422C6 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 		98ACE7B224F7557800CC6DE5 /* csvFilesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = csvFilesTableViewController.swift; sourceTree = "<group>"; };
 		98ACE7B424F760D600CC6DE5 /* csvFilesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = csvFilesTableViewCell.swift; sourceTree = "<group>"; };
 		98ACE7B624F7713000CC6DE5 /* SummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewController.swift; sourceTree = "<group>"; };
+		98E4EBD52516E08F002AB3F3 /* SummaryGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryGraphView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,9 +116,11 @@
 				9816B29B24EF37E200F0F4A6 /* GraphManager.swift */,
 				9816B2A824F4C09100F0F4A6 /* csvManager.swift */,
 				98ACE7B424F760D600CC6DE5 /* csvFilesTableViewCell.swift */,
-				98302B2A2505EF4700D62598 /* AverageDataView.swift */,
 				98ACE7B224F7557800CC6DE5 /* csvFilesTableViewController.swift */,
 				9869EFA724FEEE600003287B /* BaseTabBarController.swift */,
+				98302B2A2505EF4700D62598 /* AverageDataView.swift */,
+				9878C4652512F6B8002422C6 /* SummaryView.swift */,
+				98E4EBD52516E08F002AB3F3 /* SummaryGraphView.swift */,
 				98ACE7B624F7713000CC6DE5 /* SummaryViewController.swift */,
 				9869EFA124F85F290003287B /* DayViewController.swift */,
 				9869EFA324F85F360003287B /* WeekViewController.swift */,
@@ -254,6 +260,8 @@
 				9816B28E24EE334300F0F4A6 /* AuthenticationManager.swift in Sources */,
 				98302B2B2505EF4700D62598 /* AverageDataView.swift in Sources */,
 				9816B27824EDDD4000F0F4A6 /* GraphTutorial.xcdatamodeld in Sources */,
+				9878C4662512F6B8002422C6 /* SummaryView.swift in Sources */,
+				98E4EBD62516E08F002AB3F3 /* SummaryGraphView.swift in Sources */,
 				98ACE7B324F7557800CC6DE5 /* csvFilesTableViewController.swift in Sources */,
 				9816B29C24EF37E300F0F4A6 /* GraphManager.swift in Sources */,
 				9816B27224EDDD4000F0F4A6 /* SignInViewController.swift in Sources */,

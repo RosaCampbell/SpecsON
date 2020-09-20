@@ -45,13 +45,17 @@ class DayViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        print("DayViewController: viewDidLayoutSubviews")
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
-            self.dayAvDataView.currentHours = tabBar.dayAverages[self.day-1].cleanValue
-            self.dayAvDataView.averageHours = self.getAvHours(dayAverages: tabBar.dayAverages).cleanValue
-            self.dayAvDataView.averageUnits = "Hours/Day"
-            self.currentDate = tabBar.dates[self.day-1]
+            if !tabBar.dayAverages.isEmpty && !tabBar.dates.isEmpty{
+                self.dayAvDataView.currentHours = tabBar.dayAverages[self.day-1].cleanValue
+                self.dayAvDataView.averageHours = self.getAvHours(dayAverages: tabBar.dayAverages).cleanValue
+                self.dayAvDataView.averageUnits = "Hours/Day"
+                self.currentDate = tabBar.dates[self.day-1]
+            }
+            
             
             self.dayBarChart.frame = CGRect(x: 10, y: 140, width: self.view.frame.size.width - 20, height: self.view.frame.size.height - 350)
             self.view.addSubview(self.dayBarChart)

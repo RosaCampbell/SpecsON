@@ -77,6 +77,7 @@ class GraphManager {
     }
     
     public func getFileURL(fileId: String, completion: @escaping(Data?, String?, Error?) -> Void) {
+        print("Graph Manager: getFileURL instance")
         let fileContentsRequest = NSMutableURLRequest(url: URL(string: "\(MSGraphBaseURL)/me/drive/items/\(fileId)/content")!)
         fileContentsRequest.httpMethod = "GET"
         let fileContentsDataTask = MSURLSessionDataTask(request: fileContentsRequest, client: self.client, completion: {

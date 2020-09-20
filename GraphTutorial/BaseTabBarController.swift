@@ -21,13 +21,16 @@ class BaseTabBarController: UITabBarController {
     var hourAverages = [Double]()
     var dayAverages = [Double]()
     var weekAverages = [Double]()
+    var averageHoursPerHour = [Double]()
     var dates = [String]()
     var weekDates = [String]()
     var startOfFirstFullWeek = 0;
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("BaseTabBarController: viewDidLoad")
         GraphManager.instance.getFileURL(fileId: csvFile?.entityId ?? "") { (fileContentsData: Data?, fileURL: String?, error: Error?) in
+            print("BaseTabBarController dealing with the file")
             guard let fileContents = fileContentsData, error == nil else {
                 // Show the error
                 let alert = UIAlertController(title: "Error getting file contents",
@@ -52,6 +55,21 @@ class BaseTabBarController: UITabBarController {
             self.fileData = csv.convertCSV(stringData: csv.readStringFromURL(stringURL: UnwrappedUrl), stringFileName: self.csvFile?.name ?? "nil")
             self.groupFileDataIntoDays()
             self.groupDataIntoWeeks()
+            self.getAvHoursPerHour()
+//            for i in 0..<24 {
+//                print("Average for hour \(i) = \(self.averageHoursPerHour[i])")
+//            }
+        }
+    }
+    
+    public func getAvHoursPerHour()-> Void {
+        for hour in 0..<24 {
+            var hourlyAverage = 0.00
+            for day in 0..<numDays {
+                hourlyAverage += hourAverages[day*24 + hour]
+                
+            }
+            averageHoursPerHour.append(hourlyAverage/Double(numDays))
         }
     }
     
@@ -95,21 +113,17 @@ class BaseTabBarController: UITabBarController {
         guard let todayDate = formatter.date(from: today) else { return nil }
         let myCalendar = Calendar(identifier: .gregorian)
         let weekDay = myCalendar.component(.weekday, from: todayDate)
-        print("getDayOfWeek: weekday = \(weekDay)")
         return weekDay
     }
     
     public func groupDataIntoWeeks()-> Void {
-        print("groupDataIntoWeeks()")
         var startOfWeekFound = false
         var i = 0
         
         while !startOfWeekFound {
-            print("dates[i] = \(dates[i])")
             if let weekday = getDayOfWeek(dates[i]) {
                 if weekday == 2 { // 2: Monday
                     startOfWeekFound = true
-                    print("start of week found at \(dates[i])")
                 }
             }
             i += 1
@@ -121,10 +135,8 @@ class BaseTabBarController: UITabBarController {
             var sumOfHoursForWeek = 0.00
             for day in 0..<7 {
                 weekDates.append(dates[(i-1) + week*7 + day])
-                print("weekDates: \(dates[(i-1) + week*7 + day])")
                 sumOfHoursForWeek += dayAverages[(i-1) + (week*7) + day]
             }
-            print("Sum of hours for week = \(sumOfHoursForWeek)")
             weekAverages.append(sumOfHoursForWeek)
         }
     }

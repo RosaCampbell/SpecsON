@@ -62,37 +62,3 @@ class AverageDataView: UIView {
         }
     }
 }
-
-//class AverageSummaryView: UIView {
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        setupViews()
-//        setupConstraints()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    func setupViews() {
-//        self.addSubview(contentView)
-//
-//    }
-//
-//    func setupConstraints() {
-//        self.translatesAutoresizingMaskIntoConstraints = false
-//        contentView.translatesAutoresizingMaskIntoConstraints = false
-//        contentView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10).isActive = true
-//        contentView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -110).isActive = true
-//        contentView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
-//        contentView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
-//    }
-//
-//    let contentView: UIView = {
-//        let view = UIView(frame: CGRect(x: 0, y: 300, width: 100, height: 50))
-//        view.layer.borderWidth = 1.0
-//        view.layer.borderColor = UIColor.lightGray.cgColor
-//        return view
-//    }()
-//
-//}
