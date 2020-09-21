@@ -87,8 +87,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
                 
                 self.summaryDayView.valueLabel.text = String(self.getAvHours(averages: tabBar.dayAverages).cleanValue)
                 self.summaryWeekView.valueLabel.text = String(self.getAvHours(averages: tabBar.weekAverages).cleanValue)
-                self.summaryDayView.outOfTotal = "Of "+String(self.endHour - self.startHour)+" waking hours"
-                self.summaryWeekView.outOfTotal = "Of "+String(7*(self.endHour - self.startHour))+" waking hours"
+                self.summaryDayView.outOfTotal = "of "+String(self.endHour - self.startHour)+" waking hours"
+                self.summaryWeekView.outOfTotal = "of "+String(7*(self.endHour - self.startHour))+" waking hours"
                 for hour in 0..<self.avHoursPerHour.count {
                     entries.append(ChartDataEntry(x: Double(hour), y: self.avHoursPerHour[hour]))
                 }
@@ -119,14 +119,14 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         summaryDayView.title = "Daily Average"
         summaryDayView.value = "0"
         summaryDayView.units = "hours"
-        summaryDayView.outOfTotal = "out of 12 waking hours"
+        summaryDayView.outOfTotal = "of 12 waking hours"
         summaryDayView.layer.cornerRadius = 5
         summaryDayView.layer.borderWidth = 0
         summaryDayView.layer.masksToBounds = true
         summaryWeekView.title = "Weekly Average"
         summaryWeekView.value = "0"
         summaryWeekView.units = "hours"
-        summaryWeekView.outOfTotal = "out of \(12*7) waking hours"
+        summaryWeekView.outOfTotal = "of \(12*7) waking hours"
         summaryWeekView.layer.cornerRadius = 5
         summaryWeekView.layer.borderWidth = 0
         summaryWeekView.layer.masksToBounds = true

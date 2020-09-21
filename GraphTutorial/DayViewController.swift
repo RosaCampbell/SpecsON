@@ -18,6 +18,11 @@ class DayViewController: UIViewController, ChartViewDelegate {
     private var currentDate = String()
     private var xAxisLabels: [String] = ["12 A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12 P", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
     public var totalAvHoursPerDay: Double = 0
+    private var firstDataLoad = true
+    private var entries = [BarChartDataEntry]()
+    private var hourAverages = [Double]()
+    private var dates = [String]()
+    
     
     @IBOutlet public var dayAvDataView: AverageDataView!
     @IBOutlet public var dayGraphView: UIView!
@@ -26,12 +31,16 @@ class DayViewController: UIViewController, ChartViewDelegate {
     @IBAction func forwardOneDay() {
         if day < (importedFileData.count/288 - 1) {
             day += 1
+            setCurrentDateAndEntries()
+            setupBarChart()
         }
     }
     
     @IBAction func backOneDay() {
         if day > 1 {
             day -= 1
+            setCurrentDateAndEntries()
+            setupBarChart()
         }
     }
     
@@ -50,48 +59,28 @@ class DayViewController: UIViewController, ChartViewDelegate {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
             if !tabBar.dayAverages.isEmpty && !tabBar.dates.isEmpty{
+                self.hourAverages = tabBar.hourAverages
+                self.dates = tabBar.dates
                 self.dayAvDataView.currentHours = tabBar.dayAverages[self.day-1].cleanValue
                 self.dayAvDataView.averageHours = self.getAvHours(dayAverages: tabBar.dayAverages).cleanValue
                 self.dayAvDataView.averageUnits = "Hours/Day"
-                self.currentDate = tabBar.dates[self.day-1]
             }
             
             self.dayBarChart.frame = CGRect(x: self.dayGraphView.frame.origin.x, y: self.dayGraphView.frame.origin.y, width: self.dayGraphView.bounds.width, height: self.dayGraphView.bounds.height)
             self.view.addSubview(self.dayBarChart)
 
-            var entries = [BarChartDataEntry]()
-
             if !self.importedFileData.isEmpty {
-                self.displayDate.text = self.currentDate
-                for j in 0..<24 {
-                    entries.append(BarChartDataEntry(x: Double(j), y: tabBar.hourAverages[(self.day-1)*24+j]))
+                if self.firstDataLoad == true {
+                    self.firstDataLoad = false
+                    self.setCurrentDateAndEntries()
+                    self.setupBarChart()
                 }
             } else {
                 for i in 0..<24 {
-                    entries.append(BarChartDataEntry(x: Double(i), y: 0))
+                    self.entries.append(BarChartDataEntry(x: Double(i), y: 0))
                 }
+                self.setupBarChart()
             }
-
-            let set = BarChartDataSet(entries: entries)
-            set.setColors(UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0))
-            //r: 50, g: 115, b:186
-            set.drawValuesEnabled = false
-            self.dayBarChart.xAxis.drawGridLinesEnabled = false
-            self.dayBarChart.xAxis.drawAxisLineEnabled = false
-            self.dayBarChart.xAxis.drawLabelsEnabled = true
-            self.dayBarChart.xAxis.labelPosition = .bottom
-            self.dayBarChart.xAxis.valueFormatter = DefaultAxisValueFormatter(block: {(index, _) in
-                return self.xAxisLabels[Int(index)]
-            })
-            self.dayBarChart.xAxis.labelCount = 8
-            self.dayBarChart.leftAxis.axisMaximum = 1.0
-            self.dayBarChart.leftAxis.axisMinimum = 0.0
-            self.dayBarChart.rightAxis.drawGridLinesEnabled = false
-            self.dayBarChart.rightAxis.drawAxisLineEnabled = false
-            self.dayBarChart.rightAxis.drawLabelsEnabled = false
-            self.dayBarChart.legend.enabled = false
-            let data = BarChartData(dataSet: set)
-            self.dayBarChart.data = data
         }
     }
     
@@ -101,6 +90,38 @@ class DayViewController: UIViewController, ChartViewDelegate {
             dayAverage += dayAverages[index]
         }
         return dayAverage/Double(dayAverages.count)
+    }
+    
+    private func setCurrentDateAndEntries()->  Void {
+        entries.removeAll()
+        currentDate = dates[day-1]
+        displayDate.text = currentDate
+        for j in 0..<24 {
+            entries.append(BarChartDataEntry(x: Double(j), y: hourAverages[(day-1)*24+j]))
+        }
+    }
+    
+    private func setupBarChart()->Void {
+        let set = BarChartDataSet(entries: entries)
+        set.setColors(UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0))
+        //r: 50, g: 115, b:186
+        set.drawValuesEnabled = false
+        dayBarChart.xAxis.drawGridLinesEnabled = false
+        dayBarChart.xAxis.drawAxisLineEnabled = false
+        dayBarChart.xAxis.drawLabelsEnabled = true
+        dayBarChart.xAxis.labelPosition = .bottom
+        dayBarChart.xAxis.valueFormatter = DefaultAxisValueFormatter(block: {(index, _) in
+            return self.xAxisLabels[Int(index)]
+        })
+        dayBarChart.xAxis.labelCount = 8
+        dayBarChart.leftAxis.axisMaximum = 1.0
+        dayBarChart.leftAxis.axisMinimum = 0.0
+        dayBarChart.rightAxis.drawGridLinesEnabled = false
+        dayBarChart.rightAxis.drawAxisLineEnabled = false
+        dayBarChart.rightAxis.drawLabelsEnabled = false
+        dayBarChart.legend.enabled = false
+        let data = BarChartData(dataSet: set)
+        dayBarChart.data = data
     }
 }
 
