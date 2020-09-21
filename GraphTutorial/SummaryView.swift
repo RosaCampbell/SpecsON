@@ -16,6 +16,7 @@ class SummaryView: UIView {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var valueLabel: UILabel!
     @IBOutlet var unitsLabel: UILabel!
+    @IBOutlet var outOfTotalLabel: UILabel!
 
     override init (frame: CGRect) {
         super.init(frame: frame)
@@ -53,6 +54,12 @@ class SummaryView: UIView {
     var units: String? {
         didSet {
             unitsLabel.text = units
+        }
+    }
+    
+    var outOfTotal: String? {
+        didSet {
+            outOfTotalLabel.text = outOfTotal
         }
     }
 }

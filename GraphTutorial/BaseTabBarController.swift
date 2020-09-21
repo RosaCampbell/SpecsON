@@ -51,24 +51,15 @@ class BaseTabBarController: UITabBarController {
             
             let csv = csvManager()
             self.fileData = csv.convertCSV(stringData: csv.readStringFromURL(stringURL: UnwrappedUrl), stringFileName: self.csvFile?.name ?? "nil")
-            self.groupFileDataIntoDays()
-            self.groupDataIntoWeeks()
-            self.getAvHoursPerHour()
-//            for i in 0..<24 {
-//                print("Average for hour \(i) = \(self.averageHoursPerHour[i])")
-//            }
+        
+            self.adjustDataBasedOnWakingHours()
         }
     }
     
-    public func getAvHoursPerHour()-> Void {
-        for hour in 0..<24 {
-            var hourlyAverage = 0.00
-            for day in 0..<numDays {
-                hourlyAverage += hourAverages[day*24 + hour]
-                
-            }
-            averageHoursPerHour.append(hourlyAverage/Double(numDays))
-        }
+    public func adjustDataBasedOnWakingHours()-> Void {
+        groupFileDataIntoDays()
+        groupDataIntoWeeks()
+        getAvHoursPerHour()
     }
     
     public func groupFileDataIntoDays()-> Void {
@@ -79,6 +70,7 @@ class BaseTabBarController: UITabBarController {
             for i in 0..<dates.count {
                 dates[i] = ""
             }
+
             if fileData[i]["Date Time"]!.contains(" 00:0") {
                 isStartDay = true
             }
@@ -136,6 +128,17 @@ class BaseTabBarController: UITabBarController {
                 sumOfHoursForWeek += dayAverages[(i-1) + (week*7) + day]
             }
             weekAverages.append(sumOfHoursForWeek)
+        }
+    }
+    
+    public func getAvHoursPerHour()-> Void {
+        for hour in 0..<24 {
+            var hourlyAverage = 0.00
+            for day in 0..<numDays {
+                hourlyAverage += hourAverages[day*24 + hour]
+                
+            }
+            averageHoursPerHour.append(hourlyAverage/Double(numDays))
         }
     }
 }
