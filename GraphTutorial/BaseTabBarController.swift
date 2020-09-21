@@ -107,9 +107,31 @@ class BaseTabBarController: UITabBarController {
     }
     
     public func groupDataIntoWeeks()-> Void {
+        
+//        for day in 0..<dates.count {
+//            if let weekday = getDayOfWeek(dates[day]) {
+//                if weekday == 2 {
+//
+//                }
+//                for i in 0..<(weekday - 2) {
+//                    weekAverages.append(0)
+//                }
+//            }
+//        }
+//
+//        numWeeks = Int((Double(dates.count - i)/7.00))
+//        startOfFirstFullWeek = i-1
+//        for week in 0..<numWeeks {
+//            var sumOfHoursForWeek = 0.00
+//            for day in 0..<7 {
+//                weekDates.append(dates[(i-1) + week*7 + day])
+//                sumOfHoursForWeek += dayAverages[(i-1) + (week*7) + day]
+//            }
+//            weekAverages.append(sumOfHoursForWeek)
+//        }
         var startOfWeekFound = false
         var i = 0
-        
+
         while !startOfWeekFound {
             if let weekday = getDayOfWeek(dates[i]) {
                 if weekday == 2 { // 2: Monday
@@ -118,7 +140,7 @@ class BaseTabBarController: UITabBarController {
             }
             i += 1
         }
-        
+
         numWeeks = Int((Double(dates.count - i)/7.00))
         startOfFirstFullWeek = i-1
         for week in 0..<numWeeks {

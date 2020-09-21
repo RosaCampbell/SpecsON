@@ -14,23 +14,25 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     
     private var weekBarChart = BarChartView()
     private var importedFileData = [[String:String]]()
-    private var week: Int = 1
+    private var week: Int = 0
     private var currentWeekStart = String()
     private var currentWeekEnd = String()
     private var xAxisLabels: [String] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    private var avHoursPerDay = [Double]()
+    private var paddedDates = [String]()
     
     @IBOutlet public var weekAvDataView: AverageDataView!
     @IBOutlet weak var displayWeeksDateRange: UILabel!
     @IBOutlet public var weekGraphView: UIView!
     
     @IBAction func forwardOneWeek() {
-        if week < (importedFileData.count/(288*7) - 1) {
+        if week < (avHoursPerDay.count/7 - 1) {
         week += 1
         }
     }
     
     @IBAction func backOneWeek() {
-        if week > 1 {
+        if week >= 1 {
             week -= 1
         }
     }
@@ -48,10 +50,7 @@ class WeekViewController: UIViewController, ChartViewDelegate {
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
-            self.currentWeekStart = tabBar.weekDates[(self.week-1)*7].components(separatedBy: " 00:")[0]
-            self.currentWeekEnd = tabBar.weekDates[(self.week-1)*7 + 6].components(separatedBy: " 00:")[0]
-            self.weekAvDataView.currentHours = tabBar.weekAverages[self.week - 1].cleanValue
-            self.weekAvDataView.averageHours = self.getAvHoursPerWeek(weekAverages: tabBar.weekAverages).cleanValue
+            self.paddedDates = tabBar.dates
             self.weekAvDataView.averageUnits = "Hours/Week"
             self.weekBarChart.frame = CGRect(x: self.weekGraphView.frame.origin.x, y: self.weekGraphView.frame.origin.y, width: self.weekGraphView.bounds.width, height: self.weekGraphView.bounds.height)
             self.view.addSubview(self.weekBarChart)
@@ -59,9 +58,14 @@ class WeekViewController: UIViewController, ChartViewDelegate {
             var entries = [BarChartDataEntry]()
 
             if !self.importedFileData.isEmpty {
+                self.getAvHoursPerDay(dayAverages: tabBar.dayAverages, dates: tabBar.dates)
+                self.weekAvDataView.currentHours = self.getHoursThisWeek(dayAverages: self.avHoursPerDay).cleanValue
+                self.weekAvDataView.averageHours = self.getAvHoursPerWeek(dayAverages: tabBar.dayAverages).cleanValue
+                self.currentWeekStart = self.paddedDates[(self.week)*7]
+                self.currentWeekEnd = self.paddedDates[(self.week)*7 + 6]
                 self.displayWeeksDateRange.text = self.currentWeekStart+" - "+self.currentWeekEnd
                 for day in 0..<7 {
-                    entries.append(BarChartDataEntry(x: Double(day), y: tabBar.dayAverages[tabBar.startOfFirstFullWeek + (self.week-1)*7 + day]))
+                    entries.append(BarChartDataEntry(x: Double(day), y: self.avHoursPerDay[self.week*7 + day]))
                 }
             } else {
                 for i in 0..<7 {
@@ -90,11 +94,71 @@ class WeekViewController: UIViewController, ChartViewDelegate {
         }
     }
     
-    private func getAvHoursPerWeek(weekAverages: [Double])->Double {
-        var weekAverage = 0.00
-        for week in 0..<weekAverages.count {
-            weekAverage += weekAverages[week]
+    func getDayOfWeek(_ today:String) -> Int? {
+        
+        let formatter  = DateFormatter()
+        formatter.dateFormat = "MMM dd, yyyy"
+        guard let todayDate = formatter.date(from: today) else { return nil }
+        let myCalendar = Calendar(identifier: .gregorian)
+        let weekDay = myCalendar.component(.weekday, from: todayDate)
+        return weekDay
+    }
+    
+    private func getAvHoursPerDay(dayAverages: [Double], dates: [String])-> Void {
+        avHoursPerDay.removeAll()
+        let numDays = (Int((Double(dates.count)/7.00)) + 1)*7
+
+        if let weekday = getDayOfWeek(dates.first!) {
+            if weekday == 2 {
+            } else if weekday == 1 {
+                for _ in 0..<6 {                        // Sunday = 1: Pad first week with 6 zeros
+                    avHoursPerDay.append(0.00)
+                    paddedDates.insert(missingDate(at: "start"), at: 0)
+                }
+            } else {
+                for _ in 0..<(weekday - 2) {            // Tue = 3, W = 4... : Pad first week with X zeros
+                    avHoursPerDay.append(0.00)
+                    paddedDates.insert(missingDate(at: "start"), at: 0)
+                }
+            }
+            for day in dayAverages {                    // Fill in data
+                avHoursPerDay.append(day)
+            }
+            
+            for _ in avHoursPerDay.count..<numDays {    // Pad last week with required zeros
+                avHoursPerDay.append(0.00)
+                paddedDates.append(missingDate(at: "end"))
+            }
         }
-        return weekAverage/Double(weekAverages.count)
+    }
+    
+    private func missingDate(at: String)-> String {
+        var paddedDate = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy"
+        if at == "start" {
+            let date = dateFormatter.date(from: paddedDates.first!)
+            paddedDate = Calendar.current.date(byAdding: .day, value: (-1), to: date!)!
+        } else if at == "end" {
+            let date = dateFormatter.date(from: paddedDates.last!)
+            paddedDate = Calendar.current.date(byAdding: .day, value: (1), to: date!)!
+        }
+        return dateFormatter.string(from: paddedDate)
+    }
+    
+    private func getHoursThisWeek(dayAverages: [Double])-> Double {
+        var hoursThisWeek = 0.00
+        for day in week*7..<(week+1)*7 {
+            hoursThisWeek += dayAverages[day]
+        }
+        return hoursThisWeek
+    }
+    
+    private func getAvHoursPerWeek(dayAverages: [Double])->Double {
+        var weekAverage = 0.00
+        for day in dayAverages {
+            weekAverage += day
+        }
+        return (weekAverage*7)/Double(dayAverages.count)
     }
 }
