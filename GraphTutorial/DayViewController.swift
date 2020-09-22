@@ -47,17 +47,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        dayTotalHoursView.layer.cornerRadius = 5
-        dayTotalHoursView.layer.borderWidth = 0
-        dayTotalHoursView.layer.masksToBounds = true
-        dayTotalHoursView.title = "Today"
-        dayTotalHoursView.units = "hours"
-        dayAverageHoursView.layer.cornerRadius = 5
-        dayAverageHoursView.layer.borderWidth = 0
-        dayAverageHoursView.layer.masksToBounds = true
-        dayAverageHoursView.title = "Average"
-        dayAverageHoursView.units = "hours"
-        
+        setupDataSummaryView()
         dayBarChart.delegate = self
     }
     
@@ -108,6 +98,24 @@ class DayViewController: UIViewController, ChartViewDelegate {
         for j in 0..<24 {
             entries.append(BarChartDataEntry(x: Double(j), y: hourAverages[(day-1)*24+j]))
         }
+    }
+    
+    private func setupDataSummaryView()-> Void {
+        dayTotalHoursView.layer.cornerRadius = 5
+        dayTotalHoursView.layer.borderWidth = 0
+        dayTotalHoursView.layer.masksToBounds = true
+        dayTotalHoursView.title = "Today"
+        dayTotalHoursView.value = "0"
+        dayTotalHoursView.units = "hours"
+        dayTotalHoursView.outOfTotal = "0% of 24 waking hours"
+        
+        dayAverageHoursView.layer.cornerRadius = 5
+        dayAverageHoursView.layer.borderWidth = 0
+        dayAverageHoursView.layer.masksToBounds = true
+        dayAverageHoursView.title = "Average"
+        dayAverageHoursView.value = "0"
+        dayAverageHoursView.units = "hours"
+        dayAverageHoursView.outOfTotal = "0% of 24 waking hours"
     }
     
     private func setupBarChart()->Void {

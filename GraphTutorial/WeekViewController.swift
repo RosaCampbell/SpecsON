@@ -20,6 +20,8 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     private var xAxisLabels: [String] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     private var avHoursPerDay = [Double]()
     private var paddedDates = [String]()
+    private var entries = [BarChartDataEntry]()
+    private var firstDataLoad = true
     
     @IBOutlet public var weekTotalHoursView: SummaryView!
     @IBOutlet public var weekAverageHoursView: SummaryView!
@@ -28,29 +30,23 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     
     @IBAction func forwardOneWeek() {
         if week < (avHoursPerDay.count/7 - 1) {
-        week += 1
+            week += 1
+            setCurrentDateAndEntries()
+            setupBarChart()
         }
     }
     
     @IBAction func backOneWeek() {
         if week >= 1 {
             week -= 1
+            setCurrentDateAndEntries()
+            setupBarChart()
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        weekTotalHoursView.layer.cornerRadius = 5
-        weekTotalHoursView.layer.borderWidth = 0
-        weekTotalHoursView.layer.masksToBounds = true
-        weekTotalHoursView.title = "This Week"
-        weekTotalHoursView.units = "hours"
-        weekAverageHoursView.layer.cornerRadius = 5
-        weekAverageHoursView.layer.borderWidth = 0
-        weekAverageHoursView.layer.masksToBounds = true
-        weekAverageHoursView.title = "Average"
-        weekAverageHoursView.units = "hours"
-        
+        setupDataSummaryView()
         weekBarChart.delegate = self
     }
     
@@ -60,47 +56,77 @@ class WeekViewController: UIViewController, ChartViewDelegate {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
             self.paddedDates = tabBar.dates
+            
             self.weekBarChart.frame = CGRect(x: self.weekGraphView.frame.origin.x, y: self.weekGraphView.frame.origin.y, width: self.weekGraphView.bounds.width, height: self.weekGraphView.bounds.height)
             self.view.addSubview(self.weekBarChart)
-
-            var entries = [BarChartDataEntry]()
+            
+            self.getAvHoursPerDay(dayAverages: tabBar.dayAverages, dates: tabBar.dates)
+            self.weekTotalHoursView.value = self.getHoursThisWeek(dayAverages: self.avHoursPerDay).cleanValue
+            self.weekAverageHoursView.value = self.getAvHoursPerWeek(dayAverages: tabBar.dayAverages).cleanValue
+            self.weekTotalHoursView.outOfTotal = "\(0)% of \(0) waking hours"
+            self.weekAverageHoursView.outOfTotal = "\(0)% of \(0) waking hours"
 
             if !self.importedFileData.isEmpty {
-                self.getAvHoursPerDay(dayAverages: tabBar.dayAverages, dates: tabBar.dates)
-                self.weekTotalHoursView.value = self.getHoursThisWeek(dayAverages: self.avHoursPerDay).cleanValue
-                self.weekAverageHoursView.value = self.getAvHoursPerWeek(dayAverages: tabBar.dayAverages).cleanValue
-                self.weekTotalHoursView.outOfTotal = "\(0)% of \(0) waking hours"
-                self.weekAverageHoursView.outOfTotal = "\(0)% of \(0) waking hours"
-                self.currentWeekStart = self.paddedDates[(self.week)*7]
-                self.currentWeekEnd = self.paddedDates[(self.week)*7 + 6]
-                self.displayWeeksDateRange.text = self.currentWeekStart+" - "+self.currentWeekEnd
-                for day in 0..<7 {
-                    entries.append(BarChartDataEntry(x: Double(day), y: self.avHoursPerDay[self.week*7 + day]))
+                if self.firstDataLoad == true {
+                    self.firstDataLoad = false
+                    self.setCurrentDateAndEntries()
+                    self.setupBarChart()
                 }
             } else {
                 for i in 0..<7 {
-                    entries.append(BarChartDataEntry(x: Double(i), y: 0))
+                    self.entries.append(BarChartDataEntry(x: Double(i), y: 0))
                 }
+                self.setupBarChart()
             }
+        }
+    }
+    
+    private func setupDataSummaryView()-> Void {
+        weekTotalHoursView.layer.cornerRadius = 5
+        weekTotalHoursView.layer.borderWidth = 0
+        weekTotalHoursView.layer.masksToBounds = true
+        weekTotalHoursView.title = "This Week"
+        weekTotalHoursView.value = "0"
+        weekTotalHoursView.units = "hours"
+        weekTotalHoursView.outOfTotal = "0% of \(24*7) waking hours"
 
-            let set = BarChartDataSet(entries: entries)
-            set.setColors(UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0))
-            set.drawValuesEnabled = false
-            self.weekBarChart.xAxis.drawGridLinesEnabled = false
-            self.weekBarChart.xAxis.drawAxisLineEnabled = false
-            self.weekBarChart.xAxis.drawLabelsEnabled = true
-            self.weekBarChart.xAxis.labelPosition = .bottom
-            self.weekBarChart.xAxis.valueFormatter = DefaultAxisValueFormatter(block: {(index, _) in
-                return self.xAxisLabels[Int(index)]
-            })
-            self.weekBarChart.xAxis.labelCount = 7
-            self.weekBarChart.leftAxis.axisMaximum = 24.0
-            self.weekBarChart.leftAxis.axisMinimum = 0.0
-            self.weekBarChart.rightAxis.drawGridLinesEnabled = false
-            self.weekBarChart.rightAxis.drawLabelsEnabled = false
-            self.weekBarChart.legend.enabled = false
-            let data = BarChartData(dataSet: set)
-            self.weekBarChart.data = data
+        weekAverageHoursView.layer.cornerRadius = 5
+        weekAverageHoursView.layer.borderWidth = 0
+        weekAverageHoursView.layer.masksToBounds = true
+        weekAverageHoursView.title = "Average"
+        weekAverageHoursView.value = "0"
+        weekAverageHoursView.units = "hours"
+        weekAverageHoursView.outOfTotal = "0% of \(24*7) waking hours"
+    }
+    
+    private func setupBarChart()-> Void {
+        let set = BarChartDataSet(entries: entries)
+        set.setColors(UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0))
+        set.drawValuesEnabled = false
+        weekBarChart.xAxis.drawGridLinesEnabled = false
+        weekBarChart.xAxis.drawAxisLineEnabled = false
+        weekBarChart.xAxis.drawLabelsEnabled = true
+        weekBarChart.xAxis.labelPosition = .bottom
+        weekBarChart.xAxis.valueFormatter = DefaultAxisValueFormatter(block: {(index, _) in
+            return self.xAxisLabels[Int(index)]
+        })
+        weekBarChart.xAxis.labelCount = 7
+        weekBarChart.leftAxis.axisMaximum = 24.0
+        weekBarChart.leftAxis.axisMinimum = 0.0
+        weekBarChart.rightAxis.drawGridLinesEnabled = false
+        weekBarChart.rightAxis.drawLabelsEnabled = false
+        weekBarChart.legend.enabled = false
+        let data = BarChartData(dataSet: set)
+        weekBarChart.data = data
+    }
+    
+    private func setCurrentDateAndEntries()-> Void {
+        entries.removeAll()
+        currentWeekStart = paddedDates[week*7]
+        currentWeekEnd = paddedDates[week*7 + 6]
+        displayWeeksDateRange.text = currentWeekStart + " - " + currentWeekEnd
+        for day in 0..<7 {
+            entries.append(BarChartDataEntry(x: Double(day), y: self.avHoursPerDay[self.week*7 + day]))
         }
     }
     
