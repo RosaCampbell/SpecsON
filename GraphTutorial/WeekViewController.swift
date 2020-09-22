@@ -21,7 +21,8 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     private var avHoursPerDay = [Double]()
     private var paddedDates = [String]()
     
-    @IBOutlet public var weekAvDataView: AverageDataView!
+    @IBOutlet public var weekTotalHoursView: SummaryView!
+    @IBOutlet public var weekAverageHoursView: SummaryView!
     @IBOutlet weak var displayWeeksDateRange: UILabel!
     @IBOutlet public var weekGraphView: UIView!
     
@@ -39,9 +40,17 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        weekAvDataView.layer.cornerRadius = 5
-        weekAvDataView.layer.borderWidth = 0
-        weekAvDataView.layer.masksToBounds = true
+        weekTotalHoursView.layer.cornerRadius = 5
+        weekTotalHoursView.layer.borderWidth = 0
+        weekTotalHoursView.layer.masksToBounds = true
+        weekTotalHoursView.title = "This Week"
+        weekTotalHoursView.units = "hours"
+        weekAverageHoursView.layer.cornerRadius = 5
+        weekAverageHoursView.layer.borderWidth = 0
+        weekAverageHoursView.layer.masksToBounds = true
+        weekAverageHoursView.title = "Average"
+        weekAverageHoursView.units = "hours"
+        
         weekBarChart.delegate = self
     }
     
@@ -51,7 +60,6 @@ class WeekViewController: UIViewController, ChartViewDelegate {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
             self.paddedDates = tabBar.dates
-            self.weekAvDataView.averageUnits = "Hours/Week"
             self.weekBarChart.frame = CGRect(x: self.weekGraphView.frame.origin.x, y: self.weekGraphView.frame.origin.y, width: self.weekGraphView.bounds.width, height: self.weekGraphView.bounds.height)
             self.view.addSubview(self.weekBarChart)
 
@@ -59,8 +67,10 @@ class WeekViewController: UIViewController, ChartViewDelegate {
 
             if !self.importedFileData.isEmpty {
                 self.getAvHoursPerDay(dayAverages: tabBar.dayAverages, dates: tabBar.dates)
-                self.weekAvDataView.currentHours = self.getHoursThisWeek(dayAverages: self.avHoursPerDay).cleanValue
-                self.weekAvDataView.averageHours = self.getAvHoursPerWeek(dayAverages: tabBar.dayAverages).cleanValue
+                self.weekTotalHoursView.value = self.getHoursThisWeek(dayAverages: self.avHoursPerDay).cleanValue
+                self.weekAverageHoursView.value = self.getAvHoursPerWeek(dayAverages: tabBar.dayAverages).cleanValue
+                self.weekTotalHoursView.outOfTotal = "\(0)% of \(0) waking hours"
+                self.weekAverageHoursView.outOfTotal = "\(0)% of \(0) waking hours"
                 self.currentWeekStart = self.paddedDates[(self.week)*7]
                 self.currentWeekEnd = self.paddedDates[(self.week)*7 + 6]
                 self.displayWeeksDateRange.text = self.currentWeekStart+" - "+self.currentWeekEnd

@@ -24,7 +24,8 @@ class DayViewController: UIViewController, ChartViewDelegate {
     private var dates = [String]()
     
     
-    @IBOutlet public var dayAvDataView: AverageDataView!
+    @IBOutlet public var dayTotalHoursView: SummaryView!
+    @IBOutlet public var dayAverageHoursView: SummaryView!
     @IBOutlet public var dayGraphView: UIView!
     @IBOutlet weak var displayDate: UILabel!
     
@@ -46,9 +47,16 @@ class DayViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        dayAvDataView.layer.cornerRadius = 5
-        dayAvDataView.layer.borderWidth = 0
-        dayAvDataView.layer.masksToBounds = true
+        dayTotalHoursView.layer.cornerRadius = 5
+        dayTotalHoursView.layer.borderWidth = 0
+        dayTotalHoursView.layer.masksToBounds = true
+        dayTotalHoursView.title = "Today"
+        dayTotalHoursView.units = "hours"
+        dayAverageHoursView.layer.cornerRadius = 5
+        dayAverageHoursView.layer.borderWidth = 0
+        dayAverageHoursView.layer.masksToBounds = true
+        dayAverageHoursView.title = "Average"
+        dayAverageHoursView.units = "hours"
         
         dayBarChart.delegate = self
     }
@@ -61,9 +69,10 @@ class DayViewController: UIViewController, ChartViewDelegate {
             if !tabBar.dayAverages.isEmpty && !tabBar.dates.isEmpty{
                 self.hourAverages = tabBar.hourAverages
                 self.dates = tabBar.dates
-                self.dayAvDataView.currentHours = tabBar.dayAverages[self.day-1].cleanValue
-                self.dayAvDataView.averageHours = self.getAvHours(dayAverages: tabBar.dayAverages).cleanValue
-                self.dayAvDataView.averageUnits = "Hours/Day"
+                self.dayTotalHoursView.value = String(tabBar.dayAverages[self.day-1].cleanValue)
+                self.dayAverageHoursView.value = String(self.getAvHours(dayAverages: tabBar.dayAverages).cleanValue)
+                self.dayTotalHoursView.outOfTotal = "\(0)% of \(0) waking hours"
+                self.dayAverageHoursView.outOfTotal = "\(0)% of \(0) waking hours"
             }
             
             self.dayBarChart.frame = CGRect(x: self.dayGraphView.frame.origin.x, y: self.dayGraphView.frame.origin.y, width: self.dayGraphView.bounds.width, height: self.dayGraphView.bounds.height)
