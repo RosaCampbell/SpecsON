@@ -14,7 +14,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     private var summaryLineChart = LineChartView()
     private var hourAverages = [Double]()
-    private var wakingHourAverages = [Double]()
+    private var dayAverages = [Double]()
+    private var weekAverages = [Double]()
+    private var dates = [String]()
     private var avHoursPerHour = [Double]()
     private var csvFile: MSGraphDriveItem?
     private let gradientLayer = CAGradientLayer()
@@ -59,6 +61,10 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.hourAverages = tabBar.hourAverages
+            self.dayAverages = tabBar.dayAverages
+            self.weekAverages = tabBar.weekAverages
+            self.dates = tabBar.dates
+            
             self.avHoursPerHour = tabBar.averageHoursPerHour
             self.csvFile = tabBar.csvFile
             
@@ -75,20 +81,12 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
                     self.startDate = tabBar.dates.first! + " 00:00"
                     self.endDateInput.text = tabBar.dates.last! + " 00:00"
                     self.endDate = tabBar.dates.last! + " 00:00"
-                    let limitsDateFormatter = DateFormatter()
-                    limitsDateFormatter.dateFormat = "MMM dd, yyyy"
-                    self.startDatePicker?.minimumDate = limitsDateFormatter.date(from: tabBar.dates.first ?? "")
-                    self.startDatePicker?.maximumDate = limitsDateFormatter.date(from: tabBar.dates.last ?? "")
-                    self.endDatePicker?.maximumDate = limitsDateFormatter.date(from: tabBar.dates.last ?? "")
-                    self.endDatePicker?.minimumDate = limitsDateFormatter.date(from: tabBar.dates.first ?? "")
+                    self.setDatePickerLimits()
                 }
                 
                 self.setStartAndEndTimes()
+                self.displayStartAndEndTimes()
                 
-                self.summaryDayView.valueLabel.text = String(self.getAvHours(averages: tabBar.dayAverages).cleanValue)
-                self.summaryWeekView.valueLabel.text = String(self.getAvHours(averages: tabBar.weekAverages).cleanValue)
-                self.summaryDayView.outOfTotal = "of "+String(self.endHour - self.startHour)+" waking hours"
-                self.summaryWeekView.outOfTotal = "of "+String(7*(self.endHour - self.startHour))+" waking hours"
                 for hour in 0..<self.avHoursPerHour.count {
                     entries.append(ChartDataEntry(x: Double(hour), y: self.avHoursPerHour[hour]))
                 }
@@ -102,6 +100,15 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         }
     }
     
+    private func setDatePickerLimits()-> Void {
+        let limitsDateFormatter = DateFormatter()
+        limitsDateFormatter.dateFormat = "MMM dd, yyyy"
+        startDatePicker?.minimumDate = limitsDateFormatter.date(from: dates.first ?? "")
+        startDatePicker?.maximumDate = limitsDateFormatter.date(from: dates.last ?? "")
+        endDatePicker?.maximumDate = limitsDateFormatter.date(from: dates.last ?? "")
+        endDatePicker?.minimumDate = limitsDateFormatter.date(from: dates.first ?? "")
+    }
+    
     private func setStartAndEndTimes()-> Void {
         let startString = startDate.components(separatedBy: ":")[0]
         startHour = Int(startString.components(separatedBy: " ")[3]) ?? 0
@@ -112,6 +119,19 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         if endHour == 0 { endHour = 24 }
     }
     
+    private func displayStartAndEndTimes()-> Void {
+        let day = getAvHours(averages: dayAverages)
+        let week = day*7.0
+        let dayWake = Double(endHour - startHour)
+        let weekWake = 7.0*dayWake
+        let dayPercentage = 100*day/dayWake
+        let weekPercentage = 100*week/weekWake
+        summaryDayView.valueLabel.text = day.cleanValue
+        summaryWeekView.valueLabel.text = week.cleanValue
+        summaryDayView.outOfTotal = "\(dayPercentage.cleanValue)% of \(dayWake.cleanValue) waking hours"
+        summaryWeekView.outOfTotal = "\(weekPercentage.cleanValue)% of \(weekWake.cleanValue) waking hours"
+    }
+    
     private func setupSummaryViews()-> Void {
         summaryGraphView.layer.cornerRadius = 5
         summaryGraphView.layer.borderWidth = 0
@@ -119,14 +139,14 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         summaryDayView.title = "Daily Average"
         summaryDayView.value = "0"
         summaryDayView.units = "hours"
-        summaryDayView.outOfTotal = "of 12 waking hours"
+        summaryDayView.outOfTotal = "0% of 24 waking hours"
         summaryDayView.layer.cornerRadius = 5
         summaryDayView.layer.borderWidth = 0
         summaryDayView.layer.masksToBounds = true
         summaryWeekView.title = "Weekly Average"
         summaryWeekView.value = "0"
         summaryWeekView.units = "hours"
-        summaryWeekView.outOfTotal = "of \(12*7) waking hours"
+        summaryWeekView.outOfTotal = "0% of 168 waking hours"
         summaryWeekView.layer.cornerRadius = 5
         summaryWeekView.layer.borderWidth = 0
         summaryWeekView.layer.masksToBounds = true
@@ -170,8 +190,6 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     @objc func viewTapped(gestureRecogniser: UITapGestureRecognizer ) {
         view.endEditing(true)
-        trimToWakingHours()
-//        print("size of wakingHourAverages: \(wakingHourAverages.count)")
     }
     
     @objc func startDateChanged(datePicker: UIDatePicker) {
@@ -193,18 +211,5 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             hourSum += hour
         }
         return String(hourSum)
-    }
-    
-    private func trimToWakingHours()-> Void {
-        wakingHourAverages.removeAll()
-        var day = 0
-        for hour in 0..<hourAverages.count {
-            if (hour >= startHour) && (day<(endDay - startDay + 1)) {
-                for wakeHour in 0..<(endHour - startHour) {
-                    wakingHourAverages.append(hourAverages[hour + wakeHour])
-                }
-                day += 1
-            }
-        }
     }
 }
