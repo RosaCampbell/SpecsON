@@ -17,7 +17,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private var dayAverages = [Double]()
     private var weekAverages = [Double]()
     private var dates = [String]()
-    private var avHoursPerHour = [Double]()
+    private var averageHoursPerHour = [Double]()
     private var csvFile: MSGraphDriveItem?
     private let gradientLayer = CAGradientLayer()
     private var xAxisLabels: [String] = ["12A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12P", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
@@ -64,31 +64,26 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             self.dayAverages = tabBar.dayAverages
             self.weekAverages = tabBar.weekAverages
             self.dates = tabBar.dates
-            
-            self.avHoursPerHour = tabBar.averageHoursPerHour
+            self.averageHoursPerHour = tabBar.averageHoursPerHour
             self.csvFile = tabBar.csvFile
             
             self.summaryLineChart.frame = CGRect(x: self.summaryGraphView.frame.origin.x + 8, y: self.summaryGraphView.frame.origin.y + 8, width: self.summaryGraphView.bounds.width - 16, height: self.summaryGraphView.bounds.height - 16)
             self.view.addSubview(self.summaryLineChart)
             
-            var entries = [ChartDataEntry]()
+            var entries = [ChartDataEntry](repeating: ChartDataEntry(x:0, y:0), count: 24)
 
-            if !self.avHoursPerHour.isEmpty {
+            if !self.averageHoursPerHour.isEmpty {
                 
                 self.dataReadFlag += 1
                 if self.dataReadFlag == 1 {
-                    self.startDateInput.text = tabBar.dates.first! + " 00:00"
-                    self.startDate = tabBar.dates.first! + " 00:00"
-                    self.endDateInput.text = tabBar.dates.last! + " 00:00"
-                    self.endDate = tabBar.dates.last! + " 00:00"
                     self.setDatePickerLimits()
+                    self.displayInitialDatePickerValues()
                 }
                 
                 self.setStartAndEndTimes()
                 self.displayStartAndEndTimes()
-                
-                for hour in 0..<self.avHoursPerHour.count {
-                    entries.append(ChartDataEntry(x: Double(hour), y: self.avHoursPerHour[hour]))
+                for hour in 0..<self.averageHoursPerHour.count {
+                    entries.append(ChartDataEntry(x: Double(hour), y: self.averageHoursPerHour[hour]))
                 }
             } else {
                 for i in 0..<24 {
@@ -107,6 +102,13 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         startDatePicker?.maximumDate = limitsDateFormatter.date(from: dates.last ?? "")
         endDatePicker?.maximumDate = limitsDateFormatter.date(from: dates.last ?? "")
         endDatePicker?.minimumDate = limitsDateFormatter.date(from: dates.first ?? "")
+    }
+    
+    private func displayInitialDatePickerValues()-> Void {
+        startDateInput.text = dates.first! + " 00:00"
+        startDate = dates.first! + " 00:00"
+        endDateInput.text = dates.last! + " 00:00"
+        endDate = dates.last! + " 00:00"
     }
     
     private func setStartAndEndTimes()-> Void {
