@@ -23,6 +23,8 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     private var entries = [BarChartDataEntry]()
     private var firstDataLoad = true
     
+    public var waking = Double()
+    
     @IBOutlet public var weekTotalHoursView: SummaryView!
     @IBOutlet public var weekAverageHoursView: SummaryView!
     @IBOutlet weak var displayWeeksDateRange: UILabel!
@@ -63,8 +65,14 @@ class WeekViewController: UIViewController, ChartViewDelegate {
             self.getAvHoursPerDay(dayAverages: tabBar.dayAverages, dates: tabBar.dates)
             self.weekTotalHoursView.value = self.getHoursThisWeek(dayAverages: self.avHoursPerDay).cleanValue
             self.weekAverageHoursView.value = self.getAvHoursPerWeek(dayAverages: tabBar.dayAverages).cleanValue
-            self.weekTotalHoursView.outOfTotal = "\(0)% of \(0) waking hours"
-            self.weekAverageHoursView.outOfTotal = "\(0)% of \(0) waking hours"
+            
+            let total = 100.0*(self.getHoursThisWeek(dayAverages: self.avHoursPerDay))/self.waking
+            let average = 100*(self.getAvHoursPerWeek(dayAverages: tabBar.dayAverages))/self.waking
+            self.weekTotalHoursView.outOfTotal = "\(total.cleanValue)% of \(self.waking.cleanValue) waking hours"
+            self.weekAverageHoursView.outOfTotal = "\(average.cleanValue)% of \(self.waking.cleanValue) waking hours"
+            
+//            self.weekTotalHoursView.outOfTotal = "\(0)% of \(0) waking hours"
+//            self.weekAverageHoursView.outOfTotal = "\(0)% of \(0) waking hours"
 
             if !self.importedFileData.isEmpty {
                 if self.firstDataLoad == true {
@@ -143,27 +151,30 @@ class WeekViewController: UIViewController, ChartViewDelegate {
     private func getAvHoursPerDay(dayAverages: [Double], dates: [String])-> Void {
         avHoursPerDay.removeAll()
         let numDays = (Int((Double(dates.count)/7.00)) + 1)*7
+        
 
         if let weekday = getDayOfWeek(dates.first!) {
             if weekday == 2 {
             } else if weekday == 1 {
-                for _ in 0..<6 {                        // Sunday = 1: Pad first week with 6 zeros
+                for _ in 0..<6 {                            // Sun = 1: Pad first week with 6 zeros
                     avHoursPerDay.append(0.00)
                     paddedDates.insert(missingDate(at: "start"), at: 0)
                 }
             } else {
-                for _ in 0..<(weekday - 2) {            // Tue = 3, W = 4... : Pad first week with X zeros
+                for _ in 0..<(weekday - 2) {                // Tue = 3, Wed = 4... : Pad first week with X zeros
                     avHoursPerDay.append(0.00)
                     paddedDates.insert(missingDate(at: "start"), at: 0)
                 }
             }
-            for day in dayAverages {                    // Fill in data
+            for day in dayAverages {                        // Fill in data
                 avHoursPerDay.append(day)
             }
             
-            for _ in avHoursPerDay.count..<numDays {    // Pad last week with required zeros
-                avHoursPerDay.append(0.00)
-                paddedDates.append(missingDate(at: "end"))
+            if avHoursPerDay.count < numDays {              // If it doesn't end on a Sunday
+                for _ in avHoursPerDay.count..<numDays {    // Pad last week with required zeros
+                    avHoursPerDay.append(0.00)
+                    paddedDates.append(missingDate(at: "end"))
+                }
             }
         }
     }

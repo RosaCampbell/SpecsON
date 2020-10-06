@@ -98,6 +98,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private func sendDataToTabs()-> Void {
         let dayTab = (self.tabBarController?.viewControllers?[1])! as! DayViewController
         dayTab.waking = Double(endHour - startHour)
+        let weekTab = (self.tabBarController?.viewControllers?[2])! as! WeekViewController
+        weekTab.waking = 7.00*Double(endHour - startHour)
     }
     
     private func setDatePickerLimits()-> Void {
