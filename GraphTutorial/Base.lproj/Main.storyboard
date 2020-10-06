@@ -667,7 +667,9 @@
         <scene sceneID="iZU-rg-uQX">
             <objects>
                 <tabBarController id="EWp-fr-8kD" customClass="BaseTabBarController" customModule="SpecsON" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="bU0-g9-eGQ"/>
+                    <navigationItem key="navigationItem" id="bU0-g9-eGQ">
+                        <barButtonItem key="backBarButtonItem" id="Zlg-XO-5IQ"/>
+                    </navigationItem>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7K2-fH-giw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

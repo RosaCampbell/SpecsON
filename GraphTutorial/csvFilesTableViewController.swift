@@ -109,4 +109,9 @@ class csvFilesTableViewController: UITableViewController {
         }
         return "Date not in format yyyMMddHHmm"
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
 }

@@ -40,8 +40,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private var dataReadFlag: Int = 0
     private var startDate = String()
     private var endDate = String()
-    private var startHour: Int = 0
-    private var endHour: Int = 0
+    private var startHour = Double()
+    private var endHour = Double()
     private var startDay: Int = 0
     private var endDay: Int = 0
     
@@ -95,7 +95,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
                     self.setDatePickerLimits()
                     self.displayInitialDatePickerValues()
                 }
-                self.setStartAndEndTimes()
+                self.setStartAndEndDates()
                 self.displayStartAndEndTimes()
                 for hour in 0..<self.averageHoursPerHour.count {
                     entries.append(ChartDataEntry(x: Double(hour), y: self.averageHoursPerHour[hour]))
@@ -130,25 +130,27 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     private func displayInitialDatePickerValues()-> Void {
         startDateInput.text = dates.first!
-        startDate = dates.first! + " 00:00"
+        startDate = dates.first!
+        startHour = 7.00
         endDateInput.text = dates.last!
-        endDate = dates.last! + " 00:00"
+        endDate = dates.last!
+        endHour = 19.00
     }
     
-    private func setStartAndEndTimes()-> Void {
+    private func setStartAndEndDates()-> Void {
         let startString = startDate.components(separatedBy: ":")[0]
-        startHour = Int(startString.components(separatedBy: " ")[3]) ?? 0
+//        startHour = Int(startString.components(separatedBy: " ")[3]) ?? 0
         startDay = Int(startString.components(separatedBy: " ")[1].dropLast()) ?? 0
         let endString = endDate.components(separatedBy: ":")[0]
-        endHour = Int(endString.components(separatedBy: " ")[3]) ?? 24
+//        endHour = Int(endString.components(separatedBy: " ")[3]) ?? 24
         endDay = Int(endString.components(separatedBy: " ")[1].dropLast()) ?? 0
-        if endHour == 0 { endHour = 24 }
+//        if endHour == 0 { endHour = 24 }
     }
     
     private func displayStartAndEndTimes()-> Void {
         let day = getAvHours(averages: dayAverages)
         let week = day*7.0
-        let dayWake = Double(endHour - startHour)
+        let dayWake = endHour - startHour
         let weekWake = 7.0*dayWake
         let dayPercentage = 100*day/dayWake
         let weekPercentage = 100*week/weekWake
@@ -222,11 +224,13 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy"
         startDateInput.text = dateFormatter.string(from: datePicker.date)
+        startDate = dateFormatter.string(from: datePicker.date)
     }
     @objc func endDateChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy"
         endDateInput.text = dateFormatter.string(from: datePicker.date)
+        endDate = dateFormatter.string(from: datePicker.date)
     }
     @objc func startHoursChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
@@ -234,12 +238,23 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
         startHourInput.text = dateFormatter.string(from: datePicker.date)
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: datePicker.date)
+        let minute = calendar.component(.minute, from: datePicker.date)
+        startHour = Double(hour)
+        if minute == 30 { startHour += 0.5 }
     }
+    
     @objc func endHoursChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
         endHourInput.text = dateFormatter.string(from: datePicker.date)
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: datePicker.date)
+        let minute = calendar.component(.minute, from: datePicker.date)
+        endHour = Double(hour)
+        if minute == 30 { endHour += 0.5 }
     }
 }
