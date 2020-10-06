@@ -74,12 +74,12 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
 
             if !self.averageHoursPerHour.isEmpty {
                 
+                self.sendDataToTabs()
                 self.dataReadFlag += 1
                 if self.dataReadFlag == 1 {
                     self.setDatePickerLimits()
                     self.displayInitialDatePickerValues()
                 }
-                
                 self.setStartAndEndTimes()
                 self.displayStartAndEndTimes()
                 for hour in 0..<self.averageHoursPerHour.count {
@@ -93,6 +93,11 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
 
             self.setupSummaryLineChart(entries: entries)
         }
+    }
+    
+    private func sendDataToTabs()-> Void {
+        let dayTab = (self.tabBarController?.viewControllers?[1])! as! DayViewController
+        dayTab.waking = Double(endHour - startHour)
     }
     
     private func setDatePickerLimits()-> Void {

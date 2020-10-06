@@ -23,6 +23,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
     private var hourAverages = [Double]()
     private var dates = [String]()
     
+    public var waking = Double()
     
     @IBOutlet public var dayTotalHoursView: SummaryView!
     @IBOutlet public var dayAverageHoursView: SummaryView!
@@ -56,13 +57,16 @@ class DayViewController: UIViewController, ChartViewDelegate {
         DispatchQueue.main.async {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.importedFileData = tabBar.fileData
-            if !tabBar.dayAverages.isEmpty && !tabBar.dates.isEmpty{
+            if !tabBar.dayAverages.isEmpty {
                 self.hourAverages = tabBar.hourAverages
                 self.dates = tabBar.dates
-                self.dayTotalHoursView.value = String(tabBar.dayAverages[self.day-1].cleanValue)
-                self.dayAverageHoursView.value = String(self.getAvHours(dayAverages: tabBar.dayAverages).cleanValue)
-                self.dayTotalHoursView.outOfTotal = "\(0)% of \(0) waking hours"
-                self.dayAverageHoursView.outOfTotal = "\(0)% of \(0) waking hours"
+                self.dayTotalHoursView.value = tabBar.dayAverages[self.day-1].cleanValue
+                self.dayAverageHoursView.value = self.getAvHours(dayAverages: tabBar.dayAverages).cleanValue
+                
+                let total = 100.0*(tabBar.dayAverages[self.day-1])/self.waking
+                let average = 100*(self.getAvHours(dayAverages: tabBar.dayAverages))/self.waking
+                self.dayTotalHoursView.outOfTotal = "\(total.cleanValue)% of \(self.waking.cleanValue) waking hours"
+                self.dayAverageHoursView.outOfTotal = "\(average.cleanValue)% of \(self.waking.cleanValue) waking hours"
             }
             
             self.dayBarChart.frame = CGRect(x: self.dayGraphView.frame.origin.x, y: self.dayGraphView.frame.origin.y, width: self.dayGraphView.bounds.width, height: self.dayGraphView.bounds.height)
