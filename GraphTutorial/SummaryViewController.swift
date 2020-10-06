@@ -15,7 +15,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private var summaryLineChart = LineChartView()
     private var hourAverages = [Double]()
     private var dayAverages = [Double]()
-    private var weekAverages = [Double]()
+    private var cutDayAverages = [Double]()
+    
     private var dates = [String]()
     private var averageHoursPerHour = [Double]()
     private var csvFile: MSGraphDriveItem?
@@ -77,7 +78,6 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             let tabBar = self.tabBarController as! BaseTabBarController
             self.hourAverages = tabBar.hourAverages
             self.dayAverages = tabBar.dayAverages
-            self.weekAverages = tabBar.weekAverages
             self.dates = tabBar.dates
             self.averageHoursPerHour = tabBar.averageHoursPerHour
             self.csvFile = tabBar.csvFile

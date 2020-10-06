@@ -17,10 +17,8 @@ class BaseTabBarController: UITabBarController {
     var fileData = [[String:String]]()
     var csvFile: MSGraphDriveItem?
     var numDays: Int = 0
-    var numWeeks: Int = 0
     var hourAverages = [Double]()
     var dayAverages = [Double]()
-    var weekAverages = [Double]()
     var averageHoursPerHour = [Double]()
     var dates = [String]()
     var weekDates = [String]()
@@ -59,7 +57,6 @@ class BaseTabBarController: UITabBarController {
     
     public func adjustDataBasedOnWakingHours()-> Void {
         groupFileDataIntoDays()
-        groupDataIntoWeeks()
         getAvHoursPerHour()
     }
     
@@ -94,42 +91,6 @@ class BaseTabBarController: UITabBarController {
                 dayAverageState += hourAverages[day*24 + hour]
             }
             dayAverages.append(dayAverageState)
-        }
-    }
-    
-    func getDayOfWeek(_ today:String) -> Int? {
-        
-        let formatter  = DateFormatter()
-        formatter.dateFormat = "MMM dd, yyyy"
-        guard let todayDate = formatter.date(from: today) else { return nil }
-        let myCalendar = Calendar(identifier: .gregorian)
-        let weekDay = myCalendar.component(.weekday, from: todayDate)
-        return weekDay
-    }
-    
-    public func groupDataIntoWeeks()-> Void {
-
-        var startOfWeekFound = false
-        var i = 0
-
-        while !startOfWeekFound {
-            if let weekday = getDayOfWeek(dates[i]) {
-                if weekday == 2 { // 2: Monday
-                    startOfWeekFound = true
-                }
-            }
-            i += 1
-        }
-
-        numWeeks = Int((Double(dates.count - i)/7.00))
-        startOfFirstFullWeek = i-1
-        for week in 0..<numWeeks {
-            var sumOfHoursForWeek = 0.00
-            for day in 0..<7 {
-                weekDates.append(dates[(i-1) + week*7 + day])
-                sumOfHoursForWeek += dayAverages[(i-1) + (week*7) + day]
-            }
-            weekAverages.append(sumOfHoursForWeek)
         }
     }
     
