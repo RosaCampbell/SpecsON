@@ -29,8 +29,14 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     @IBOutlet public var summaryGraphView: SummaryGraphView!
     @IBOutlet public var startDateInput: UITextField!
     @IBOutlet public var endDateInput: UITextField!
+    @IBOutlet public var startHourInput: UITextField!
+    @IBOutlet public var endHourInput: UITextField!
+
     private var startDatePicker: UIDatePicker?
     private var endDatePicker: UIDatePicker?
+    private var startHourPicker: UIDatePicker?
+    private var endHourPicker: UIDatePicker?
+    
     private var dataReadFlag: Int = 0
     private var startDate = String()
     private var endDate = String()
@@ -43,12 +49,21 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         super.viewDidLoad()
         startDatePicker = UIDatePicker()
         endDatePicker = UIDatePicker()
-        startDatePicker?.datePickerMode = .dateAndTime
-        endDatePicker?.datePickerMode = .dateAndTime
+        startHourPicker = UIDatePicker()
+        endHourPicker = UIDatePicker()
+        startDatePicker?.datePickerMode = .date
+        endDatePicker?.datePickerMode = .date
+        startHourPicker?.datePickerMode = .time
+        endHourPicker?.datePickerMode = .time
         startDateInput.inputView = startDatePicker
         endDateInput.inputView = endDatePicker
+        startHourInput.inputView = startHourPicker
+        endHourInput.inputView = endHourPicker
+        
         startDatePicker?.addTarget(self, action: #selector(SummaryViewController.startDateChanged(datePicker:)), for: .valueChanged)
         endDatePicker?.addTarget(self, action: #selector(SummaryViewController.endDateChanged(datePicker:)), for: .valueChanged)
+        startHourPicker?.addTarget(self, action: #selector(SummaryViewController.startHoursChanged(datePicker:)), for: .valueChanged)
+        endHourPicker?.addTarget(self, action: #selector(SummaryViewController.endHoursChanged(datePicker:)), for: .valueChanged)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(SummaryViewController.viewTapped(gestureRecogniser:)))
         view.addGestureRecognizer(tapGesture)
         
@@ -109,12 +124,14 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         startDatePicker?.maximumDate = limitsDateFormatter.date(from: dates.last ?? "")
         endDatePicker?.maximumDate = limitsDateFormatter.date(from: dates.last ?? "")
         endDatePicker?.minimumDate = limitsDateFormatter.date(from: dates.first ?? "")
+        startHourPicker?.minuteInterval = 30
+        endHourPicker?.minuteInterval = 30
     }
     
     private func displayInitialDatePickerValues()-> Void {
-        startDateInput.text = dates.first! + " 00:00"
+        startDateInput.text = dates.first!
         startDate = dates.first! + " 00:00"
-        endDateInput.text = dates.last! + " 00:00"
+        endDateInput.text = dates.last!
         endDate = dates.last! + " 00:00"
     }
     
@@ -203,22 +220,26 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     @objc func startDateChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
+        dateFormatter.dateFormat = "MMM dd, yyyy"
         startDateInput.text = dateFormatter.string(from: datePicker.date)
-        startDate = dateFormatter.string(from: datePicker.date)
     }
     @objc func endDateChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
+        dateFormatter.dateFormat = "MMM dd, yyyy"
         endDateInput.text = dateFormatter.string(from: datePicker.date)
-        endDate = dateFormatter.string(from: datePicker.date)
     }
-    
-    private func sum(hours: [Double])-> String {
-        var hourSum = 0.00
-        for hour in hours {
-            hourSum += hour
-        }
-        return String(hourSum)
+    @objc func startHoursChanged(datePicker: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+        startHourInput.text = dateFormatter.string(from: datePicker.date)
+    }
+    @objc func endHoursChanged(datePicker: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+        endHourInput.text = dateFormatter.string(from: datePicker.date)
     }
 }
