@@ -170,18 +170,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         endHour = 19.00
     }
     
-//    private func setStartAndEndDates()-> Void {
-//        let startString = startDate.components(separatedBy: ":")[0]
-////        startHour = Int(startString.components(separatedBy: " ")[3]) ?? 0
-//        startDay = Int(startString.components(separatedBy: " ")[1].dropLast()) ?? 0
-//        let endString = endDate.components(separatedBy: ":")[0]
-////        endHour = Int(endString.components(separatedBy: " ")[3]) ?? 24
-//        endDay = Int(endString.components(separatedBy: " ")[1].dropLast()) ?? 0
-////        if endHour == 0 { endHour = 24 }
-//    }
-    
     private func displayStartAndEndTimes()-> Void {
-        let day = getAvHours(averages: dayAverages)
+        let day = getAvHours(averages: cutDayAverages)
         let week = day*7.0
         let dayWake = endHour - startHour
         let weekWake = 7.0*dayWake
