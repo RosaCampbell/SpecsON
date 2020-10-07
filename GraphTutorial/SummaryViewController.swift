@@ -74,7 +74,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             
             var entries = [ChartDataEntry](repeating: ChartDataEntry(x:0, y:0), count: 24)
 
-            if !self.averageHoursPerHour.isEmpty {
+            if self.averageHoursPerHour.count == 24 {
                 self.dataReadFlag += 1
                 if self.dataReadFlag == 1 {
                     self.setDatePickerLimits()
