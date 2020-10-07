@@ -109,4 +109,8 @@ class BaseTabBarController: UITabBarController {
             averageHoursPerHour.append(hourlyAverage/Double(numDays))
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        navigationItem.title = csvFile?.name?.components(separatedBy: ["_", "."])[0]
+    }
 }
