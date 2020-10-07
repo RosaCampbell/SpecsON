@@ -16,6 +16,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private var hourAverages = [Double]()
     private var dayAverages = [Double]()
     private var cutDayAverages = [Double]()
+    private var cutHourAverages = [Double]()
+    private var cutDates = [String]()
+    private var numDays = Int()
     
     private var dates = [String]()
     private var averageHoursPerHour = [Double]()
@@ -39,8 +42,10 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private var endHourPicker: UIDatePicker?
     
     private var dataReadFlag: Int = 0
-    private var startDate = String()
-    private var endDate = String()
+    private var startDateString = String()
+    private var endDateString = String()
+    private var startDate = Date()
+    private var endDate = Date()
     private var startHour = Double()
     private var endHour = Double()
     private var startDay: Int = 0
@@ -48,28 +53,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        startDatePicker = UIDatePicker()
-        endDatePicker = UIDatePicker()
-        startHourPicker = UIDatePicker()
-        endHourPicker = UIDatePicker()
-        startDatePicker?.datePickerMode = .date
-        endDatePicker?.datePickerMode = .date
-        startHourPicker?.datePickerMode = .time
-        endHourPicker?.datePickerMode = .time
-        startDateInput.inputView = startDatePicker
-        endDateInput.inputView = endDatePicker
-        startHourInput.inputView = startHourPicker
-        endHourInput.inputView = endHourPicker
-        
-        startDatePicker?.addTarget(self, action: #selector(SummaryViewController.startDateChanged(datePicker:)), for: .valueChanged)
-        endDatePicker?.addTarget(self, action: #selector(SummaryViewController.endDateChanged(datePicker:)), for: .valueChanged)
-        startHourPicker?.addTarget(self, action: #selector(SummaryViewController.startHoursChanged(datePicker:)), for: .valueChanged)
-        endHourPicker?.addTarget(self, action: #selector(SummaryViewController.endHoursChanged(datePicker:)), for: .valueChanged)
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(SummaryViewController.viewTapped(gestureRecogniser:)))
-        view.addGestureRecognizer(tapGesture)
-        
-        summaryLineChart.delegate = self
         setupSummaryViews()
+        setupDatePickers()
+        summaryLineChart.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -95,8 +81,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
                     self.setDatePickerLimits()
                     self.displayInitialDatePickerValues()
                 }
-                self.setStartAndEndDates()
                 self.displayStartAndEndTimes()
+                self.cutDayAveragesToStartEndDates(start: self.startDate, end: self.endDate)
+                print("averageHoursPerHour[12] = \(self.averageHoursPerHour[12])")
                 for hour in 0..<self.averageHoursPerHour.count {
                     entries.append(ChartDataEntry(x: Double(hour), y: self.averageHoursPerHour[hour]))
                 }
@@ -110,11 +97,54 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         }
     }
     
+    private func cutDayAveragesToStartEndDates(start: Date, end: Date)-> Void {
+        let startIndex = dates.index(of: startDateString)
+        let endIndex = dates.index(of: endDateString)! + 1
+        numDays = endIndex - startIndex!
+        print("numDays = \(numDays)")
+        cutDayAverages = Array(dayAverages[startIndex! ..< (endIndex)])
+        cutDates = Array(dates[startIndex! ..< (endIndex)])
+        cutHourAverages = Array(hourAverages[(24*startIndex!) ..< (24*endIndex)])
+        recalculateAverageHoursPerHour()
+    }
+    
+    private func recalculateAverageHoursPerHour()-> Void {
+        for hour in 0..<24 {
+            var hourlyAverage = 0.00
+            for day in 0..<numDays {
+                hourlyAverage += hourAverages[day*24 + hour]
+            }
+            averageHoursPerHour[hour] = hourlyAverage/Double(numDays)
+        }
+    }
+    
     private func sendDataToTabs()-> Void {
         let dayTab = (self.tabBarController?.viewControllers?[1])! as! DayViewController
         dayTab.waking = Double(endHour - startHour)
         let weekTab = (self.tabBarController?.viewControllers?[2])! as! WeekViewController
         weekTab.waking = 7.00*Double(endHour - startHour)
+    }
+    
+    private func setupDatePickers()-> Void {
+        startDatePicker = UIDatePicker()
+        endDatePicker = UIDatePicker()
+        startHourPicker = UIDatePicker()
+        endHourPicker = UIDatePicker()
+        startDatePicker?.datePickerMode = .date
+        endDatePicker?.datePickerMode = .date
+        startHourPicker?.datePickerMode = .time
+        endHourPicker?.datePickerMode = .time
+        startDateInput.inputView = startDatePicker
+        endDateInput.inputView = endDatePicker
+        startHourInput.inputView = startHourPicker
+        endHourInput.inputView = endHourPicker
+        
+        startDatePicker?.addTarget(self, action: #selector(SummaryViewController.startDateChanged(datePicker:)), for: .valueChanged)
+        endDatePicker?.addTarget(self, action: #selector(SummaryViewController.endDateChanged(datePicker:)), for: .valueChanged)
+        startHourPicker?.addTarget(self, action: #selector(SummaryViewController.startHoursChanged(datePicker:)), for: .valueChanged)
+        endHourPicker?.addTarget(self, action: #selector(SummaryViewController.endHoursChanged(datePicker:)), for: .valueChanged)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(SummaryViewController.viewTapped(gestureRecogniser:)))
+        view.addGestureRecognizer(tapGesture)
     }
     
     private func setDatePickerLimits()-> Void {
@@ -130,22 +160,22 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     private func displayInitialDatePickerValues()-> Void {
         startDateInput.text = dates.first!
-        startDate = dates.first!
+        startDateString = dates.first!
         startHour = 7.00
         endDateInput.text = dates.last!
-        endDate = dates.last!
+        endDateString = dates.last!
         endHour = 19.00
     }
     
-    private func setStartAndEndDates()-> Void {
-        let startString = startDate.components(separatedBy: ":")[0]
-//        startHour = Int(startString.components(separatedBy: " ")[3]) ?? 0
-        startDay = Int(startString.components(separatedBy: " ")[1].dropLast()) ?? 0
-        let endString = endDate.components(separatedBy: ":")[0]
-//        endHour = Int(endString.components(separatedBy: " ")[3]) ?? 24
-        endDay = Int(endString.components(separatedBy: " ")[1].dropLast()) ?? 0
-//        if endHour == 0 { endHour = 24 }
-    }
+//    private func setStartAndEndDates()-> Void {
+//        let startString = startDate.components(separatedBy: ":")[0]
+////        startHour = Int(startString.components(separatedBy: " ")[3]) ?? 0
+//        startDay = Int(startString.components(separatedBy: " ")[1].dropLast()) ?? 0
+//        let endString = endDate.components(separatedBy: ":")[0]
+////        endHour = Int(endString.components(separatedBy: " ")[3]) ?? 24
+//        endDay = Int(endString.components(separatedBy: " ")[1].dropLast()) ?? 0
+////        if endHour == 0 { endHour = 24 }
+//    }
     
     private func displayStartAndEndTimes()-> Void {
         let day = getAvHours(averages: dayAverages)
@@ -203,6 +233,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         summaryLineChart.leftAxis.drawGridLinesEnabled = false
         summaryLineChart.leftAxis.drawLabelsEnabled = false
         summaryLineChart.leftAxis.axisLineColor = .white
+        summaryLineChart.leftAxis.axisMaximum = 1.0
+        summaryLineChart.leftAxis.axisMinimum = 0.0
 
         let data = LineChartData(dataSet: set)
         summaryLineChart.data = data
@@ -223,14 +255,16 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     @objc func startDateChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy"
-        startDateInput.text = dateFormatter.string(from: datePicker.date)
-        startDate = dateFormatter.string(from: datePicker.date)
+        startDate = datePicker.date
+        startDateInput.text = dateFormatter.string(from: startDate)
+        startDateString = dateFormatter.string(from: startDate)
     }
     @objc func endDateChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy"
-        endDateInput.text = dateFormatter.string(from: datePicker.date)
-        endDate = dateFormatter.string(from: datePicker.date)
+        endDate = datePicker.date
+        endDateInput.text = dateFormatter.string(from: endDate)
+        endDateString = dateFormatter.string(from: endDate)
     }
     @objc func startHoursChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
