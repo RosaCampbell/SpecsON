@@ -16,6 +16,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private var hourAverages = [Double]()
     private var dayAverages = [Double]()
     private var cutDayAverages = [Double]()
+    private var paddedDayAverages = [Double]()
+    private var paddedDates = [String]()
+    private var averageHoursPerWeek = Double()
     private var cutHourAverages = [Double]()
     private var cutDates = [String]()
     private var numDays = Int()
@@ -74,8 +77,6 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             var entries = [ChartDataEntry](repeating: ChartDataEntry(x:0, y:0), count: 24)
 
             if !self.averageHoursPerHour.isEmpty {
-                
-                self.sendDataToTabs()
                 self.dataReadFlag += 1
                 if self.dataReadFlag == 1 {
                     self.setDatePickerLimits()
@@ -83,6 +84,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
                 }
                 self.displayStartAndEndTimes()
                 self.cutDayAveragesToStartEndDates(start: self.startDate, end: self.endDate)
+                self.paddDatesAndDayAveragesForWeekTab()
+                self.sendDataToTabs()
                 for hour in 0..<self.averageHoursPerHour.count {
                     entries.append(ChartDataEntry(x: Double(hour), y: self.averageHoursPerHour[hour]))
                 }
@@ -100,7 +103,6 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         let startIndex = dates.index(of: startDateString)
         let endIndex = dates.index(of: endDateString)! + 1
         numDays = endIndex - startIndex!
-        print("numDays = \(numDays)")
         cutDayAverages = Array(dayAverages[startIndex! ..< (endIndex)])
         cutDates = Array(dates[startIndex! ..< (endIndex)])
         cutHourAverages = Array(hourAverages[(24*startIndex!) ..< (24*endIndex)])
@@ -111,7 +113,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         for hour in 0..<24 {
             var hourlyAverage = 0.00
             for day in 0..<numDays {
-                hourlyAverage += hourAverages[day*24 + hour]
+                hourlyAverage += cutHourAverages[day*24 + hour]
             }
             averageHoursPerHour[hour] = hourlyAverage/Double(numDays)
         }
@@ -126,6 +128,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         dayTab.numDays = numDays
         let weekTab = (self.tabBarController?.viewControllers?[2])! as! WeekViewController
         weekTab.waking = 7.00*Double(endHour - startHour)
+        weekTab.paddedDates = paddedDates
+        weekTab.paddedDayAverages = paddedDayAverages
+        weekTab.averageHoursPerWeek = averageHoursPerWeek
     }
     
     private func setupDatePickers()-> Void {
@@ -173,6 +178,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private func displayStartAndEndTimes()-> Void {
         let day = getAvHours(averages: cutDayAverages)
         let week = day*7.0
+        averageHoursPerWeek = week
         let dayWake = endHour - startHour
         let weekWake = 7.0*dayWake
         let dayPercentage = 100*day/dayWake
@@ -284,4 +290,61 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         endHour = Double(hour)
         if minute == 30 { endHour += 0.5 }
     }
+    
+    // from week view controller ------------------------------------------------------------------------
+    func getDayOfWeek(_ today:String) -> Int? {
+        
+        let formatter  = DateFormatter()
+        formatter.dateFormat = "MMM dd, yyyy"
+        guard let todayDate = formatter.date(from: today) else { return nil }
+        let myCalendar = Calendar(identifier: .gregorian)
+        let weekDay = myCalendar.component(.weekday, from: todayDate)
+        return weekDay
+    }
+    
+    private func paddDatesAndDayAveragesForWeekTab()-> Void {
+        paddedDayAverages.removeAll()
+        paddedDates = cutDates
+        let numDays = (Int((Double(cutDates.count)/7.00)) + 1)*7
+        
+        if let weekday = getDayOfWeek(paddedDates.first!) {
+            if weekday == 2 {
+            } else if weekday == 1 {
+                for _ in 0..<6 {                            // Sun = 1: Pad first week with 6 zeros
+                    paddedDayAverages.append(0.00)
+                    paddedDates.insert(missingDate(at: "start"), at: 0)
+                }
+            } else {
+                for _ in 0..<(weekday - 2) {                // Tue = 3, Wed = 4... : Pad first week with X zeros
+                    paddedDayAverages.append(0.00)
+                    paddedDates.insert(missingDate(at: "start"), at: 0)
+                }
+            }
+            for day in cutDayAverages {                        // Fill in data
+                paddedDayAverages.append(day)
+            }
+            
+            if paddedDayAverages.count < numDays {              // If it doesn't end on a Sunday
+                for _ in paddedDayAverages.count..<numDays {    // Pad last week with required zeros
+                    paddedDayAverages.append(0.00)
+                    paddedDates.append(missingDate(at: "end"))
+                }
+            }
+        }
+    }
+    
+    private func missingDate(at: String)-> String {
+        var paddedDate = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy"
+        if at == "start" {
+            let date = dateFormatter.date(from: paddedDates.first!)
+            paddedDate = Calendar.current.date(byAdding: .day, value: (-1), to: date!)!
+        } else if at == "end" {
+            let date = dateFormatter.date(from: paddedDates.last!)
+            paddedDate = Calendar.current.date(byAdding: .day, value: (1), to: date!)!
+        }
+        return dateFormatter.string(from: paddedDate)
+    }
+    // from week view controller ------------------------------------------------------------------------
 }

@@ -78,14 +78,14 @@ class DayViewController: UIViewController, ChartViewDelegate {
     
     private func updateDataInDayView()-> Void {
         dayTotalHoursView.value = dayAverages[day-1].cleanValue
-        dayAverageHoursView.value = getAvHours(dayAverages: dayAverages).cleanValue
+        dayAverageHoursView.value = getAverageHours(dayAverages: dayAverages).cleanValue
         let total = 100.0*(dayAverages[day-1])/waking
-        let average = 100*(getAvHours(dayAverages: dayAverages))/waking
+        let average = 100*(getAverageHours(dayAverages: dayAverages))/waking
         dayTotalHoursView.outOfTotal = "\(total.cleanValue)% of \(waking.cleanValue) waking hours"
         dayAverageHoursView.outOfTotal = "\(average.cleanValue)% of \(waking.cleanValue) waking hours"
     }
     
-    private func getAvHours(dayAverages: [Double])-> Double {
+    private func getAverageHours(dayAverages: [Double])-> Double {
         var dayAverage = 0.00
         for index in 0..<dayAverages.count {
             dayAverage += dayAverages[index]
