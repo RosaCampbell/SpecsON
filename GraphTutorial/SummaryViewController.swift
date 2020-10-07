@@ -25,7 +25,6 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     private var dates = [String]()
     private var averageHoursPerHour = [Double]()
-    private var csvFile: MSGraphDriveItem?
     private let gradientLayer = CAGradientLayer()
     private var xAxisLabels: [String] = ["12A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12P", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
     private let specsONLightBlue: UIColor = UIColor(red: 60.0/255.0, green: 187.0/255.0, blue: 240.0/255.0, alpha: 1.0)
@@ -69,7 +68,6 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
             self.dayAverages = tabBar.dayAverages
             self.dates = tabBar.dates
             self.averageHoursPerHour = tabBar.averageHoursPerHour
-            self.csvFile = tabBar.csvFile
             
             self.summaryLineChart.frame = CGRect(x: self.summaryGraphView.frame.origin.x + 8, y: self.summaryGraphView.frame.origin.y + 8, width: self.summaryGraphView.bounds.width - 16, height: self.summaryGraphView.bounds.height - 16)
             self.view.addSubview(self.summaryLineChart)
@@ -291,7 +289,6 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         if minute == 30 { endHour += 0.5 }
     }
     
-    // from week view controller ------------------------------------------------------------------------
     func getDayOfWeek(_ today:String) -> Int? {
         
         let formatter  = DateFormatter()
@@ -310,22 +307,22 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         if let weekday = getDayOfWeek(paddedDates.first!) {
             if weekday == 2 {
             } else if weekday == 1 {
-                for _ in 0..<6 {                            // Sun = 1: Pad first week with 6 zeros
+                for _ in 0..<6 {
                     paddedDayAverages.append(0.00)
                     paddedDates.insert(missingDate(at: "start"), at: 0)
                 }
             } else {
-                for _ in 0..<(weekday - 2) {                // Tue = 3, Wed = 4... : Pad first week with X zeros
+                for _ in 0..<(weekday - 2) {
                     paddedDayAverages.append(0.00)
                     paddedDates.insert(missingDate(at: "start"), at: 0)
                 }
             }
-            for day in cutDayAverages {                        // Fill in data
+            for day in cutDayAverages {
                 paddedDayAverages.append(day)
             }
             
-            if paddedDayAverages.count < numDays {              // If it doesn't end on a Sunday
-                for _ in paddedDayAverages.count..<numDays {    // Pad last week with required zeros
+            if paddedDayAverages.count < numDays {
+                for _ in paddedDayAverages.count..<numDays {
                     paddedDayAverages.append(0.00)
                     paddedDates.append(missingDate(at: "end"))
                 }
@@ -346,5 +343,4 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         }
         return dateFormatter.string(from: paddedDate)
     }
-    // from week view controller ------------------------------------------------------------------------
 }

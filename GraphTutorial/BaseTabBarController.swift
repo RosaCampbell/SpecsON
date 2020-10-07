@@ -78,7 +78,12 @@ class BaseTabBarController: UITabBarController {
         numDays = Int((Double(fileData.count - (i-1)))/288.00) // Truncates Double
         
         for day in 0..<numDays {
-            dates.append(fileData[(i-1) + day*288]["Date Time"]?.components(separatedBy: " 00:")[0] ?? "")
+            var partialDate = fileData[(i-1) + day*288]["Date Time"]?.components(separatedBy: ":")[0]
+            partialDate?.removeLast()
+            partialDate?.removeLast()
+            partialDate?.removeLast()
+            
+            dates.append(partialDate ?? "")
             var dayAverageState = 0.00
             for hour in 0..<24 {
                 var hourAverageState = 0.00
