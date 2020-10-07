@@ -83,7 +83,6 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
                 }
                 self.displayStartAndEndTimes()
                 self.cutDayAveragesToStartEndDates(start: self.startDate, end: self.endDate)
-                print("averageHoursPerHour[12] = \(self.averageHoursPerHour[12])")
                 for hour in 0..<self.averageHoursPerHour.count {
                     entries.append(ChartDataEntry(x: Double(hour), y: self.averageHoursPerHour[hour]))
                 }
@@ -121,6 +120,10 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private func sendDataToTabs()-> Void {
         let dayTab = (self.tabBarController?.viewControllers?[1])! as! DayViewController
         dayTab.waking = Double(endHour - startHour)
+        dayTab.hourAverages = cutHourAverages
+        dayTab.dayAverages = cutDayAverages
+        dayTab.dates = cutDates
+        dayTab.numDays = numDays
         let weekTab = (self.tabBarController?.viewControllers?[2])! as! WeekViewController
         weekTab.waking = 7.00*Double(endHour - startHour)
     }

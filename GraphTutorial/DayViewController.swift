@@ -13,15 +13,16 @@ import Charts
 class DayViewController: UIViewController, ChartViewDelegate {
     
     private var dayBarChart = BarChartView()
-    private var importedFileData = [[String:String]]()
     private var day: Int = 1
     private var currentDate = String()
     private var xAxisLabels: [String] = ["12 A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12 P", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
     public var totalAvHoursPerDay: Double = 0
     private var firstDataLoad = true
     private var entries = [BarChartDataEntry]()
-    private var hourAverages = [Double]()
-    private var dates = [String]()
+    public var hourAverages = [Double]()
+    public var dayAverages = [Double]()
+    public var dates = [String]()
+    public var numDays = Int()
     
     public var waking = Double()
     
@@ -31,7 +32,7 @@ class DayViewController: UIViewController, ChartViewDelegate {
     @IBOutlet weak var displayDate: UILabel!
     
     @IBAction func forwardOneDay() {
-        if day < (importedFileData.count/288 - 1) {
+        if day < numDays {
             day += 1
             setCurrentDateAndEntries()
             setupBarChart()
@@ -52,32 +53,20 @@ class DayViewController: UIViewController, ChartViewDelegate {
         dayBarChart.delegate = self
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        day = 1
+    }
+        
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         DispatchQueue.main.async {
-            let tabBar = self.tabBarController as! BaseTabBarController
-            self.importedFileData = tabBar.fileData
-            if !tabBar.dayAverages.isEmpty {
-                self.hourAverages = tabBar.hourAverages
-                self.dates = tabBar.dates
-                self.dayTotalHoursView.value = tabBar.dayAverages[self.day-1].cleanValue
-                self.dayAverageHoursView.value = self.getAvHours(dayAverages: tabBar.dayAverages).cleanValue
-                
-                let total = 100.0*(tabBar.dayAverages[self.day-1])/self.waking
-                let average = 100*(self.getAvHours(dayAverages: tabBar.dayAverages))/self.waking
-                self.dayTotalHoursView.outOfTotal = "\(total.cleanValue)% of \(self.waking.cleanValue) waking hours"
-                self.dayAverageHoursView.outOfTotal = "\(average.cleanValue)% of \(self.waking.cleanValue) waking hours"
-            }
-            
             self.dayBarChart.frame = CGRect(x: self.dayGraphView.frame.origin.x, y: self.dayGraphView.frame.origin.y, width: self.dayGraphView.bounds.width, height: self.dayGraphView.bounds.height)
             self.view.addSubview(self.dayBarChart)
 
-            if !self.importedFileData.isEmpty {
-                if self.firstDataLoad == true {
-                    self.firstDataLoad = false
-                    self.setCurrentDateAndEntries()
-                    self.setupBarChart()
-                }
+            if !self.dayAverages.isEmpty {
+                self.updateDataInDayView()
+                self.setCurrentDateAndEntries()
+                self.setupBarChart()
             } else {
                 for i in 0..<24 {
                     self.entries.append(BarChartDataEntry(x: Double(i), y: 0))
@@ -85,6 +74,15 @@ class DayViewController: UIViewController, ChartViewDelegate {
                 self.setupBarChart()
             }
         }
+    }
+    
+    private func updateDataInDayView()-> Void {
+        dayTotalHoursView.value = dayAverages[day-1].cleanValue
+        dayAverageHoursView.value = getAvHours(dayAverages: dayAverages).cleanValue
+        let total = 100.0*(dayAverages[day-1])/waking
+        let average = 100*(getAvHours(dayAverages: dayAverages))/waking
+        dayTotalHoursView.outOfTotal = "\(total.cleanValue)% of \(waking.cleanValue) waking hours"
+        dayAverageHoursView.outOfTotal = "\(average.cleanValue)% of \(waking.cleanValue) waking hours"
     }
     
     private func getAvHours(dayAverages: [Double])-> Double {
