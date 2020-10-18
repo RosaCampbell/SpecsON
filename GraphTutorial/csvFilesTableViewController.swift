@@ -107,8 +107,6 @@ class csvFilesTableViewController: UITableViewController {
         dateFormatterDisplay.locale = Locale(identifier: "en_NZ")
 
         let date = dateFormatterGet.date(from: startDateTime)
-        print("startDateTime as string = \(startDateTime)")
-        print("Date from formatter: \(String(describing: date))")
         if let newDate = date {
             return dateFormatterDisplay.string(from: newDate)
         }
