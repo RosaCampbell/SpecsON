@@ -51,13 +51,9 @@ class BaseTabBarController: UITabBarController {
             let csv = csvManager()
             self.fileData = csv.convertCSV(stringData: csv.readStringFromURL(stringURL: UnwrappedUrl), stringFileName: self.csvFile?.name ?? "nil")
         
-            self.adjustDataBasedOnWakingHours()
+            self.groupFileDataIntoDays()
+            self.getAvHoursPerHour()
         }
-    }
-    
-    public func adjustDataBasedOnWakingHours()-> Void {
-        groupFileDataIntoDays()
-        getAvHoursPerHour()
     }
     
     public func groupFileDataIntoDays()-> Void {

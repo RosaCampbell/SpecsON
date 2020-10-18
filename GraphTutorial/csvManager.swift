@@ -72,6 +72,9 @@ class csvManager: NSObject {
         }
         getStatusFromTemperature()
         formatDateTimeColumn()
+//        for i in 0..<data.count {
+//            print("(\(data[i]["Date Time"]) = \(data[i]["Date Time"])")
+//        }
         return data
     }
     
@@ -112,7 +115,8 @@ class csvManager: NSObject {
         // set the recieved and required date format
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
-
+        dateFormatter.timeZone = TimeZone(abbreviation: "NZST")
+        dateFormatter.locale = Locale(identifier: "en_NZ")
         // convert string to date
         let prevDate = dateFormatter.date(from: strDate)
 
@@ -136,10 +140,12 @@ class csvManager: NSObject {
         // Create a formatter to parse files date format
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyyMMddHHmm"
-
+        dateFormatterGet.timeZone = TimeZone(abbreviation: "NZST")
+        dateFormatterGet.locale = Locale(identifier: "en_NZ")
         let dateFormatterDisplay = DateFormatter()
         dateFormatterDisplay.dateFormat = "MMM dd, yyyy HH:mm"
-
+        dateFormatterDisplay.timeZone = TimeZone(abbreviation: "NZST")
+        dateFormatterDisplay.locale = Locale(identifier: "en_NZ")
         let date = dateFormatterGet.date(from: strStartDate)
         if let newDate = date {
             return dateFormatterDisplay.string(from: newDate)

@@ -99,11 +99,16 @@ class csvFilesTableViewController: UITableViewController {
         // Create a formatter to parse files date format
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyyMMddHHmm"
-
+        dateFormatterGet.timeZone = TimeZone(abbreviation: "NZST")
+        dateFormatterGet.locale = Locale(identifier: "en_NZ")
         let dateFormatterDisplay = DateFormatter()
         dateFormatterDisplay.dateFormat = "MMM dd, yyyy   HH:mm"
+        dateFormatterDisplay.timeZone = TimeZone(abbreviation: "NZST")
+        dateFormatterDisplay.locale = Locale(identifier: "en_NZ")
 
         let date = dateFormatterGet.date(from: startDateTime)
+        print("startDateTime as string = \(startDateTime)")
+        print("Date from formatter: \(String(describing: date))")
         if let newDate = date {
             return dateFormatterDisplay.string(from: newDate)
         }

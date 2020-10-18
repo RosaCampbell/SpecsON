@@ -210,7 +210,12 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     private func setupSummaryLineChart(entries: [ChartDataEntry])-> Void {
         let set = LineChartDataSet(entries: entries)
         set.setColors(.white)
-        set.drawCirclesEnabled = false
+        set.drawCirclesEnabled = true
+        
+        set.circleRadius = 2.00
+        set.circleColors = [.white, .white]
+        set.circleHoleRadius = 0
+        
         set.drawValuesEnabled = false
         summaryLineChart.xAxis.drawGridLinesEnabled = false
         summaryLineChart.xAxis.axisLineColor = .white
